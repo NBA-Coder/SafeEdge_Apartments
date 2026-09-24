@@ -1438,3 +1438,458 @@ textarea:focus {
             scale(0.58);
     }
 }
+
+/* =====================================================
+   SAFEEDGE — FULL RESPONSIVE LAYOUT
+   Added without changing the existing desktop design
+   ===================================================== */
+
+/* ---------- TABLET ---------- */
+@media (max-width: 1000px) {
+
+    .booking-section {
+        padding: 75px 24px;
+    }
+
+    .booking-container {
+        grid-template-columns: 1fr;
+        gap: 55px;
+        max-width: 760px;
+    }
+
+    .booking-info {
+        padding-top: 0;
+    }
+
+    .booking-intro {
+        max-width: 650px;
+    }
+
+    .booking-benefits {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 30px;
+    }
+
+    .booking-card {
+        width: 100%;
+    }
+
+    .booking-cta {
+        padding: 75px 24px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1.3fr 1fr 1fr;
+        column-gap: 30px;
+        row-gap: 30px;
+    }
+
+    .footer-brand {
+        max-width: 240px;
+    }
+
+    .footer-contact {
+        grid-column: 1 / -1;
+    }
+
+    .footer-bottom {
+        width: 100%;
+    }
+}
+
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 750px) {
+
+    /* ================= HEADER ================= */
+
+    .nav-container {
+        width: 90%;
+        min-height: 68px;
+    }
+
+    .desktop-nav,
+    .nav-book-btn {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .mobile-nav.open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+
+    /* ================= BOOKING SECTION ================= */
+
+    .booking-section {
+        padding: 55px 18px;
+    }
+
+    .booking-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 45px;
+    }
+
+    .booking-info {
+        width: 100%;
+    }
+
+    .booking-info h2 {
+        font-size: clamp(30px, 8vw, 40px);
+        letter-spacing: -1px;
+    }
+
+    .booking-intro {
+        max-width: 100%;
+        font-size: 14px;
+    }
+
+    .booking-benefits {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px 16px;
+    }
+
+    .benefit {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .benefit-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .benefit h3 {
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .benefit p {
+        font-size: 10.5px;
+        line-height: 1.45;
+    }
+
+    .whatsapp-box {
+        margin-top: 30px;
+        padding: 13px;
+        gap: 10px;
+    }
+
+    .whatsapp-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        font-size: 17px;
+    }
+
+    .whatsapp-box span {
+        font-size: 10px;
+    }
+
+    .whatsapp-box strong {
+        font-size: 12px;
+    }
+
+
+    /* ================= BOOKING FORM ================= */
+
+    .booking-card {
+        width: 100%;
+        padding: 24px 18px;
+        border-radius: 16px;
+    }
+
+    .form-header {
+        margin-bottom: 24px;
+    }
+
+    .form-header h3 {
+        font-size: 22px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .form-group {
+        margin-bottom: 17px;
+    }
+
+    input,
+    select {
+        height: 46px;
+        padding-left: 40px;
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+
+
+    /* ================= CTA ================= */
+
+    .booking-cta {
+        padding: 65px 20px;
+    }
+
+    .cta-content h2 {
+        font-size: clamp(27px, 7vw, 36px);
+    }
+
+    .cta-content p {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .cta-btn {
+        padding: 13px 20px;
+    }
+
+
+    /* ================= FOOTER ================= */
+
+    .site-footer {
+        padding: 25px 18px 0;
+    }
+
+    .footer-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 25px;
+        row-gap: 28px;
+        width: 100%;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .footer-brand img {
+        width: 100px;
+    }
+
+    .footer-socials {
+        gap: 7px;
+    }
+
+    .footer-column {
+        min-width: 0;
+    }
+
+    .footer-column h4 {
+        font-size: 12px;
+    }
+
+    .footer-column > a,
+    .footer-contact p {
+        font-size: 10.5px;
+    }
+
+    .footer-contact {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .footer-contact p {
+        max-width: 100%;
+    }
+
+    .footer-contact p a {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .footer-bottom {
+        margin-top: 18px;
+        padding: 9px 0;
+        gap: 10px;
+    }
+
+    .footer-bottom p,
+    .footer-bottom > a {
+        font-size: 9px;
+    }
+}
+
+
+/* ---------- SMALL PHONES ---------- */
+@media (max-width: 480px) {
+
+    .nav-container {
+        width: 90%;
+        min-height: 64px;
+    }
+
+    .logo img {
+        width: 50px;
+    }
+
+    .menu-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 19px;
+    }
+
+    .mobile-nav {
+        top: 64px;
+    }
+
+
+    /* Booking */
+    .booking-section {
+        padding: 45px 15px;
+    }
+
+    .booking-benefits {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 12px;
+    }
+
+    .benefit {
+        gap: 8px;
+    }
+
+    .benefit-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 13px;
+    }
+
+    .benefit h3 {
+        font-size: 11px;
+    }
+
+    .benefit p {
+        font-size: 9.5px;
+    }
+
+    .booking-card {
+        padding: 21px 15px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-header h3 {
+        font-size: 20px;
+    }
+
+    .form-group label {
+        font-size: 10.5px;
+    }
+
+    input,
+    select {
+        height: 45px;
+        font-size: 11px;
+    }
+
+    textarea {
+        font-size: 11px;
+    }
+
+
+    /* CTA */
+    .booking-cta {
+        padding: 55px 16px;
+    }
+
+    .cta-content h2 {
+        font-size: 28px;
+    }
+
+    .cta-content p {
+        font-size: 12px;
+    }
+
+
+    /* Footer */
+    .site-footer {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .footer-container {
+        column-gap: 18px;
+        row-gap: 24px;
+    }
+
+    .footer-brand img {
+        width: 90px;
+    }
+
+    .footer-socials a {
+        width: 27px;
+        height: 27px;
+        font-size: 11px;
+    }
+
+    .footer-column h4 {
+        font-size: 11.5px;
+    }
+
+    .footer-column > a,
+    .footer-contact p {
+        font-size: 10px;
+    }
+
+    .footer-bottom {
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .footer-bottom p,
+    .footer-bottom > a {
+        font-size: 8.5px;
+    }
+
+    .footer-bottom > a {
+        white-space: nowrap;
+    }
+}
+
+
+/* ---------- EXTRA SMALL PHONES ---------- */
+@media (max-width: 360px) {
+
+    .booking-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-card {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .footer-container {
+        column-gap: 14px;
+    }
+
+    .footer-bottom {
+        gap: 6px;
+    }
+
+    .footer-bottom p,
+    .footer-bottom > a {
+        font-size: 8px;
+    }
+}
