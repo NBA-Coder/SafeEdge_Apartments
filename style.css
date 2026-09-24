@@ -76,8 +76,6 @@ button {
 
 
 
-
-
 /* =========================================================
    RESPONSIVE HEADER
    ========================================================= */
@@ -264,277 +262,6 @@ button {
 
 
 /* =========================================================
-   MOBILE MENU BUTTON
-   ========================================================= */
-
-.menu-toggle {
-    display: none;
-
-    width: 42px;
-    height: 42px;
-
-    padding: 0;
-
-    border: none;
-
-    background: transparent;
-
-    color: #071a33;
-
-    cursor: pointer;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 20px;
-}
-
-.menu-toggle:hover {
-    color: #3298e8;
-}
-
-
-/* =========================================================
-   MOBILE NAVIGATION
-   ========================================================= */
-
-.mobile-nav {
-    display: none;
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 950px) {
-
-    .nav-container {
-        width: 92%;
-
-        gap: 18px;
-    }
-
-    .logo img {
-        width: 80px;
-    }
-
-    .desktop-nav {
-        gap: 18px;
-    }
-
-    .desktop-nav a {
-        font-size: 11px;
-    }
-
-    .nav-book-btn {
-        padding: 10px 14px;
-
-        font-size: 10px;
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 750px) {
-
-    /* Header */
-
-    .nav-container {
-        min-height: 68px;
-
-        width: 90%;
-    }
-
-
-    /* Logo */
-
-    .logo img {
-        width: 80px;
-    }
-
-
-    /* Hide desktop navigation */
-
-    .desktop-nav {
-        display: none;
-    }
-
-
-    /* Hide desktop booking button */
-
-    .nav-book-btn {
-        display: none;
-    }
-
-
-    /* Show hamburger */
-
-    .menu-toggle {
-        display: flex;
-    }
-
-
-    /* =====================================================
-       MOBILE NAV
-       ===================================================== */
-
-    .mobile-nav {
-        position: absolute;
-
-        top: 68px;
-        left: 0;
-
-        width: 100%;
-
-        display: flex;
-
-        flex-direction: column;
-
-        padding: 8px 6% 20px;
-
-        background: #ffffff;
-
-        border-bottom: 1px solid #e8edf3;
-
-        box-shadow:
-            0 15px 35px rgba(7, 26, 51, 0.08);
-
-        /* Hidden by default */
-
-        opacity: 0;
-
-        visibility: hidden;
-
-        pointer-events: none;
-
-        transform: translateY(-10px);
-
-        transition:
-            opacity 0.25s ease,
-            visibility 0.25s ease,
-            transform 0.25s ease;
-    }
-
-
-    /* Open mobile menu */
-
-    .mobile-nav.active {
-        opacity: 1;
-
-        visibility: visible;
-
-        pointer-events: auto;
-
-        transform: translateY(0);
-    }
-
-
-    /* Mobile links */
-
-    .mobile-nav a {
-        display: flex;
-
-        align-items: center;
-
-        justify-content: space-between;
-
-        width: 100%;
-
-        padding: 15px 5px;
-
-        border-bottom: 1px solid #edf1f5;
-
-        color: #071a33;
-
-        font-size: 13px;
-
-        font-weight: 600;
-
-        transition:
-            color 0.2s ease,
-            padding-left 0.2s ease;
-    }
-
-    .mobile-nav a:hover {
-        color: #3298e8;
-
-        padding-left: 10px;
-    }
-
-
-    /* Mobile booking button */
-
-    .mobile-nav .mobile-book-btn {
-        justify-content: center;
-
-        gap: 8px;
-
-        margin-top: 13px;
-
-        padding: 13px;
-
-        border: none;
-
-        border-radius: 5px;
-
-        background: #071a33;
-
-        color: #ffffff;
-    }
-
-    .mobile-nav .mobile-book-btn:hover {
-        padding-left: 13px;
-
-        background: #3298e8;
-
-        color: #ffffff;
-    }
-
-}
-
-
-/* =========================================================
-   SMALL PHONES
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-    .nav-container {
-        width: 90%;
-
-        min-height: 64px;
-    }
-
-    .logo img {
-        width: 50px;
-    }
-
-    .menu-toggle {
-        width: 40px;
-        height: 40px;
-
-        font-size: 19px;
-    }
-
-    .mobile-nav {
-        top: 64px;
-    }
-
-}
-
-
-
-
-
-
-
-/* =====================================================
    HERO
 ===================================================== */
 
@@ -1820,59 +1547,7 @@ button {
     .nav-book-btn {
         display: none;
     }
-
-    .menu-toggle {
-        display: grid;
-        place-items: center;
-    }
-
-    .mobile-nav {
-        display: flex;
-        flex-direction: column;
-
-        max-height: 0;
-        overflow: hidden;
-
-        padding: 0 5%;
-
-        background: var(--dark-blue);
-
-        transition:
-            max-height 0.4s ease,
-            padding 0.4s ease;
-    }
-
-    .mobile-nav.open {
-        max-height: 450px;
-        padding-top: 20px;
-        padding-bottom: 25px;
-    }
-
-    .mobile-nav > a {
-        padding: 14px 0;
-
-        color: rgba(255, 255, 255, 0.8);
-
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-        font-size: 14px;
-    }
-
-    .mobile-book-btn {
-        margin-top: 15px;
-
-        padding: 14px 20px !important;
-
-        text-align: center;
-
-        border: 0 !important;
-        border-radius: 8px;
-
-        color: var(--dark-blue) !important;
-        background: var(--light-blue);
-    }
-
-    .highlight-grid {
+.highlight-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -2051,3 +1726,127 @@ button {
     }
 
 }
+
+/* =========================================================
+   SAFEEDGE MOBILE HAMBURGER MENU
+   MOBILE MENU ONLY
+========================================================= */
+
+.menu-toggle {
+    display: none;
+    width: 42px;
+    height: 42px;
+    margin-left: auto;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #E8EEF3;
+    border-radius: 8px;
+    color: #071A35;
+    font-size: 20px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.menu-toggle:hover {
+    background: #DDF2FF;
+    border-color: #1687D9;
+    color: #1687D9;
+}
+
+@media screen and (max-width: 800px) {
+    .desktop-nav,
+    .nav-book-btn {
+        display: none !important;
+    }
+
+    .menu-toggle {
+        display: flex !important;
+    }
+
+    .mobile-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 5% 20px;
+        background: #ffffff;
+        border-top: 1px solid #E8EEF3;
+        border-bottom: 1px solid #E8EEF3;
+        box-shadow: 0 15px 35px rgba(7, 26, 53, 0.10);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+        z-index: 999;
+    }
+
+    .mobile-nav.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .mobile-nav > a {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 48px;
+        padding: 14px 5px;
+        color: #071A35;
+        background: transparent;
+        border-bottom: 1px solid #E8EEF3;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s ease, padding-left 0.2s ease;
+    }
+
+    .mobile-nav > a:hover {
+        color: #1687D9;
+        padding-left: 10px;
+    }
+
+    .mobile-nav .mobile-book-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        margin-top: 15px;
+        min-height: 46px;
+        padding: 12px 18px;
+        background: #1687D9;
+        color: #ffffff;
+        border: none;
+        border-radius: 7px;
+        text-align: center;
+    }
+
+    .mobile-nav .mobile-book-btn:hover {
+        padding-left: 18px;
+        background: #071A35;
+        color: #ffffff;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .menu-toggle {
+        width: 39px;
+        height: 39px;
+        font-size: 18px;
+    }
+
+    .mobile-nav > a {
+        min-height: 46px;
+        padding: 13px 5px;
+        font-size: 14px;
+    }
+}
+
