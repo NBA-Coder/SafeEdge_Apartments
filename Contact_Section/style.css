@@ -1472,19 +1472,30 @@ img {
         height: 44px;
         padding: 0;
         margin-left: auto;
-        border: 0;
+        border: 0px;
+        border-radius: 1px;
         background: transparent;
-        color: var(--blue);
+        color: var(--black);
         font-size: 24px;
         line-height: 1;
         cursor: pointer;
         z-index: 1005;
     }
 
+
+    .menu-toggle:hover{
+                border-radius: 5px;
+        border-width: 0px;
+        background: var(--light-blue);
+        color: var(--blue);
+
+    }
+
     .menu-toggle:focus-visible {
         outline: 2px solid var(--blue);
         outline-offset: 3px;
         border-radius: 6px;
+        
     }
 
     .mobile-nav {
