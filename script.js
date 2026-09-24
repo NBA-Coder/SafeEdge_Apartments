@@ -1,4 +1,3 @@
-
 /* =====================================================
    SAFEEDGE APARTMENTS
    MAIN JAVASCRIPT
@@ -12,43 +11,99 @@ const mobileNav = document.getElementById("mobileNav");
 
 if (menuToggle && mobileNav) {
 
-    menuToggle.addEventListener("click", () => {
+    /* Open / Close Mobile Menu */
+
+    menuToggle.addEventListener("click", (event) => {
+
+        event.stopPropagation();
 
         mobileNav.classList.toggle("open");
 
         const icon = menuToggle.querySelector("i");
 
-        if (mobileNav.classList.contains("open")) {
+        if (icon) {
 
-            icon.classList.remove("fa-bars");
-            icon.classList.add("fa-xmark");
+            if (mobileNav.classList.contains("open")) {
 
-        } else {
+                icon.classList.remove("fa-bars");
+                icon.classList.add("fa-xmark");
 
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
+                menuToggle.setAttribute("aria-expanded", "true");
 
+            } else {
+
+                icon.classList.remove("fa-xmark");
+                icon.classList.add("fa-bars");
+
+                menuToggle.setAttribute("aria-expanded", "false");
+            }
         }
 
     });
 
 
-    /* Close mobile menu after clicking a link */
+    /* ================= MOBILE NAV LINKS ================= */
 
     const mobileLinks = mobileNav.querySelectorAll("a");
 
     mobileLinks.forEach(link => {
 
-        link.addEventListener("click", () => {
+        link.addEventListener("click", (event) => {
+
+            /*
+             * Close the mobile menu.
+             *
+             * IMPORTANT:
+             * We DO NOT use event.preventDefault().
+             * The href will automatically take the
+             * user to the selected page.
+             */
 
             mobileNav.classList.remove("open");
 
             const icon = menuToggle.querySelector("i");
 
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
+            if (icon) {
 
+                icon.classList.remove("fa-xmark");
+                icon.classList.add("fa-bars");
+
+            }
+
+            menuToggle.setAttribute("aria-expanded", "false");
+
+            /*
+             * Allow the browser to follow the href.
+             */
         });
+
+    });
+
+
+    /* ================= CLOSE WHEN CLICKING OUTSIDE ================= */
+
+    document.addEventListener("click", (event) => {
+
+        if (
+            mobileNav.classList.contains("open") &&
+            !mobileNav.contains(event.target) &&
+            !menuToggle.contains(event.target)
+        ) {
+
+            mobileNav.classList.remove("open");
+
+            const icon = menuToggle.querySelector("i");
+
+            if (icon) {
+
+                icon.classList.remove("fa-xmark");
+                icon.classList.add("fa-bars");
+
+            }
+
+            menuToggle.setAttribute("aria-expanded", "false");
+
+        }
 
     });
 
@@ -59,55 +114,63 @@ if (menuToggle && mobileNav) {
 
 const siteHeader = document.getElementById("siteHeader");
 
-window.addEventListener("scroll", () => {
+if (siteHeader) {
 
-    if (window.scrollY > 50) {
+    window.addEventListener("scroll", () => {
 
-        siteHeader.classList.add("scrolled");
+        if (window.scrollY > 50) {
 
-    } else {
+            siteHeader.classList.add("scrolled");
 
-        siteHeader.classList.remove("scrolled");
+        } else {
 
-    }
+            siteHeader.classList.remove("scrolled");
 
-});
+        }
+
+    });
+
+}
 
 
 /* ================= SCROLL REVEAL ================= */
 
 const revealElements = document.querySelectorAll(".reveal");
 
-const revealObserver = new IntersectionObserver(
+if (revealElements.length > 0) {
 
-    (entries, observer) => {
+    const revealObserver = new IntersectionObserver(
 
-        entries.forEach(entry => {
+        (entries, observer) => {
 
-            if (entry.isIntersecting) {
+            entries.forEach(entry => {
 
-                entry.target.classList.add("show");
+                if (entry.isIntersecting) {
 
-                observer.unobserve(entry.target);
+                    entry.target.classList.add("show");
 
-            }
+                    observer.unobserve(entry.target);
 
-        });
+                }
 
-    },
+            });
 
-    {
-        threshold: 0.12
-    }
+        },
 
-);
+        {
+            threshold: 0.12
+        }
+
+    );
 
 
-revealElements.forEach(element => {
+    revealElements.forEach(element => {
 
-    revealObserver.observe(element);
+        revealObserver.observe(element);
 
-});
+    });
+
+}
 
 
 /* ================= CURRENT YEAR ================= */
@@ -146,6 +209,8 @@ viewButtons.forEach(button => {
 
         const card = button.closest(".apartment-card");
 
+        if (!card) return;
+
         const image = card.querySelector(".apartment-image img");
 
         if (image) {
@@ -176,7 +241,9 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
             event.preventDefault();
 
             target.scrollIntoView({
+
                 behavior: "smooth"
+
             });
 
         }
@@ -184,4 +251,3 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     });
 
 });
-
