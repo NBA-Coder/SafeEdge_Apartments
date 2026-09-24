@@ -1853,42 +1853,18 @@ button {
 
 
 
-
-
-
-
-
 /* =====================================================
-   MOBILE NAVIGATION
-   Hidden on Desktop & Tablet
+   HIDE MOBILE NAVIGATION ON DESKTOP & TABLET
 ===================================================== */
 
-/* Desktop + Tablet */
-.mobile-nav,
-.menu-toggle {
-    display: none;
-}
-
-
-/* =====================================================
-   MOBILE VIEW
-   Show Mobile Navigation
-===================================================== */
-
-@media (max-width: 767px) {
-
-    .menu-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+@media (min-width: 768px) {
 
     .mobile-nav {
-        display: none;
+        display: none !important;
     }
 
-    .mobile-nav.active {
-        display: flex;
+    .menu-toggle {
+        display: none !important;
     }
 
 }
