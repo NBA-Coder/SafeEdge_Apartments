@@ -75,46 +75,6 @@ if (menuToggle && mobileNav) {
 }
 
 
-/* =====================================================
-   CONTACT FORM
-===================================================== */
-
-const contactForm = document.getElementById("contactForm");
-
-const submitBtn = document.getElementById("submitBtn");
-
-const buttonText = document.getElementById("buttonText");
-
-const formMessage = document.getElementById("formMessage");
-
-
-if (contactForm) {
-
-    contactForm.addEventListener("submit", async function (event) {
-
-        event.preventDefault();
-
-
-        /* ===============================
-           GET FORM VALUES
-        =============================== */
-
-        const name =
-            document.getElementById("name").value.trim();
-
-        const phone =
-            document.getElementById("phone").value.trim();
-
-        const email =
-            document.getElementById("email").value.trim();
-
-        const subject =
-            document.getElementById("subject").value.trim();
-
-        const message =
-            document.getElementById("message").value.trim();
-
-
         /* ===============================
            CLEAR PREVIOUS MESSAGE
         =============================== */
