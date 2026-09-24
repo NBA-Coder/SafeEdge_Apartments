@@ -1,804 +1,386 @@
 
-/* =========================================
-   SAFEDGE GALLERY
-========================================= */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-:root {
-    --gallery-blue: #071a33;
-    --gallery-light-blue: #3298e8;
-    --gallery-pale-blue: #eef7ff;
-    --gallery-text: #526174;
-    --gallery-border: #e5ebf2;
-    --gallery-white: #ffffff;
-}
+    <title>Contact Us | SafeEdge Apartments</title>
+    <link rel="icon" type="image/png" href="../Images/Logo.png">
 
 
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
+    <link rel="stylesheet" href="style.css">
+</head>
 
-/* =========================================
-   GALLERY HERO
-========================================= */
+<body>
 
+    <!-- ================= HEADER ================= -->
+    <header class="site-header" id="siteHeader">
 
+        <div class="container nav-container">
 
+            <!-- Logo -->
+            <a href="index.html" class="logo">
+                <img src="../Images/Logo.png" alt="SafeEdge Apartments">
+            </a>
 
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <a href="/">Home</a>
+                <a href="../Apartments_Section/">Apartments</a>
+                <a href="../Gallery_Section/">Gallery</a>
+                <a href="../About_Section/">About</a>
+                <a href="/Contact_Section/"  class="active">Contact</a>
+            </nav>
 
+            <!-- Book Button -->
+            <a href="../Book_now_Section/" class="nav-book-btn">
+                Book Now
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
 
-.gallery-hero {
-    position: relative;
-    overflow: hidden;
-}
+            <!-- Mobile Menu Button -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-.gallery-hero::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100px;
+        </div>
 
-    background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        #ffffff 100%
-    );
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
 
-    pointer-events: none;
-}
+            <a href="../">Home</a>
+            <a href="../Apartments_Section/">Apartments</a>
+            <a href="../Gallery_Section/">Gallery</a>
+            <a href="../About_Section/">About</a>
+            <a href="/Contact_Section/" style = "color: #1687D9">Contact</a>
 
-.gallery-hero {
-    min-height: 80vh;
+            <a href="../Book_now_Section/index.html" class="mobile-book-btn">
+                Book Your Stay
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
 
-    display: flex;
-    align-items: center;
+        </div>
 
-    padding: 80px 7%;
+    </header>
 
-    background-image:url(/Images//richard-kemp-ViG6OQFeGsM-unsplash.jpg);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
+    
 
-.gallery-hero-content {
-    max-width: 700px;
-    animation: galleryHeroIn 0.9s ease forwards;
-}
+        </div>
 
-.gallery-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    </section>
 
-    margin-bottom: 18px;
 
-    color: var(--gallery-light-blue);
+    <!-- ================= CONTACT SECTION ================= -->
+    <section class="contact-section">
 
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-}
+        <div class="container contact-grid">
 
-.gallery-hero h1 {
-    margin: 0;
+            <!-- Contact Information -->
+            <div class="contact-info">
 
-    color:#333333;
+                <span class="section-label">
+                    GET IN TOUCH
+                </span>
 
-    font-size: clamp(42px, 6vw, 76px);
-    font-weight: 700;
-    line-height: 1.02;
-    letter-spacing: -2.5px;
-}
+                <h2>
+                    We'd love to<br>
+                    <span>hear from you.</span>
+                </h2>
 
-.gallery-hero h1 span {
-    color: var(--gallery-light-blue);
-}
+                <p class="contact-intro">
+                    Whether you're planning a short stay, looking for a
+                    comfortable workspace, or simply have a question,
+                    our team is ready to assist you.
+                </p>
 
-.gallery-hero p {
-    max-width: 570px;
 
-    margin: 22px 0 0;
+                <div class="contact-details">
 
-    color:#333333;
+                    <a href="tel:07084247022" class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
 
-    font-size: 16px;
-    line-height: 1.7;
-}
+                        <div>
+                            <small>CALL US</small>
+                            <strong>0708 424 7022</strong>
+                        </div>
+                    </a>
 
 
+                    <a href="mailto:bookings@safedgeapartments.com" class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
 
+                        <div>
+                            <small>EMAIL US</small>
+                            <strong>bookings@safedgeapartments.com</strong>
+                        </div>
+                    </a>
 
 
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
 
-/* SCROLL */
+                        <div>
+                            <small>LOCATION</small>
+                            <strong>Ayobo, Lagos, Nigeria</strong>
+                        </div>
+                    </div>
 
-.scroll-indicator {
-    position: absolute;
 
-    right: 5%;
-    bottom: 40px;
+                    <a href="https://wa.me/2347084247022"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="contact-item">
 
-    z-index: 2;
+                        <div class="contact-icon whatsapp-icon">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
 
-    display: flex;
-    align-items: center;
-    gap: 10px;
+                        <div>
+                            <small>WHATSAPP</small>
+                            <strong>Chat with us</strong>
+                        </div>
 
-    color:var(--gallery-light-blue);
+                        <i class="fa-solid fa-arrow-up-right-from-square contact-arrow"></i>
 
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
+                    </a>
 
-    writing-mode: vertical-rl;
-}
+                </div>
 
-.scroll-indicator i {
-    color: var(--blue);
 
-    animation: scrollBounce 1.8s infinite;
-}
+               
 
-@keyframes scrollBounce {
+            </div>
 
-    0%,
-    100% {
-        transform: translateY(0);
-    }
 
-    50% {
-        transform: translateY(8px);
-    }
+            <!-- Contact Form -->
+            <div class="contact-form-wrapper">
 
-}
+                <div class="form-heading">
+                    <span>HAVE A QUESTION?</span>
+                    <h3>Send us a message</h3>
+                </div>
 
+                <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="8d4957ae-d893-426e-990c-91553eb66c3d">
 
 
 
+                    <div class="form-row">
 
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
 
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="Your full name"
+                                required
+                            >
+                        </div>
 
-/* =========================================
-   HERO ANIMATION
-========================================= */
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
 
-@keyframes galleryHeroIn {
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="0801 234 5678"
+                                required
+                            >
+                        </div>
 
-    from {
-        opacity: 0;
-        transform: translateY(25px);
-    }
+                    </div>
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 
-}
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
 
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
 
-/* =========================================
-   GALLERY SECTION
-========================================= */
 
-.gallery-section {
-    padding: 85px 7%;
-    background: #ffffff;
-}
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
 
-.gallery-container {
-    max-width: 1250px;
-    margin: 0 auto;
-}
+                        <select id="subject" name="subject" required>
+                            <option value="" disabled selected>
+                                What can we help you with?
+                            </option>
 
+                            <option value="apartment-booking">
+                                Apartment Booking
+                            </option>
 
-/* =========================================
-   HEADING
-========================================= */
+                            <option value="workspace">
+                                Workspace
+                            </option>
 
-.gallery-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+                            <option value="availability">
+                                Availability
+                            </option>
 
-    gap: 40px;
+                            <option value="general">
+                                General Enquiry
+                            </option>
+                        </select>
+                    </div>
 
-    margin-bottom: 35px;
-}
 
-.section-label {
-    display: block;
+                    <div class="form-group">
+                        <label for="message">Message</label>
 
-    margin-bottom: 9px;
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="5"
+                            placeholder="Tell us how we can help..."
+                            required
+                        ></textarea>
+                    </div>
 
-    color: var(--gallery-light-blue);
 
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-}
+                    <button type="submit" class="submit-btn" id="submitBtn">
 
-.gallery-heading h2 {
-    margin: 0;
+                        <span id="buttonText">
+                            Send Message
+                        </span>
 
-    color: var(--gallery-blue);
+                        <i class="fa-solid fa-paper-plane"></i>
 
-    font-size: clamp(30px, 4vw, 46px);
-    line-height: 1.1;
-    letter-spacing: -1.2px;
-}
+                    </button>
 
-.gallery-heading h2 span {
-    color: var(--gallery-light-blue);
-}
+                    <div class="form-message" id="formMessage"></div>
 
-.gallery-heading > p {
-    max-width: 350px;
+                </form>
 
-    margin: 0;
+            </div>
 
-    color: var(--gallery-text);
+        </div>
 
-    font-size: 13px;
-    line-height: 1.7;
-}
+    </section>
 
 
-/* =========================================
-   FILTER BUTTONS
-========================================= */
 
-.gallery-filters {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
 
-    gap: 8px;
+     <!-- ================= FOOTER ================= -->
 
-    margin-bottom: 28px;
-}
+<footer class="site-footer">
 
-.filter-btn {
-    border: 1px solid var(--gallery-border);
-    background: #ffffff;
+    <div class="footer-container">
 
-    color: #526174;
+        <!-- BRAND -->
+        <div class="footer-brand">
+            <img src="../Images/Logo.png" alt="SafeEdge Apartments">
 
-    padding: 9px 17px;
+            
 
-    border-radius: 30px;
+            <div class="footer-socials">
+                <a href="https://www.instagram.com/safeedgeapartments?stkn=MXhoY3BzNTBpc3hn" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
 
-    font-family: inherit;
-    font-size: 11.5px;
-    font-weight: 600;
+                <a href="https://www.facebook.com/share/19a1oBpX6V/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
 
-    cursor: pointer;
+                <a href="https://www.tiktok.com/@safe.edge.apartmen?_r=1&_t=ZS-99mVBFWIWaA" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
 
-    transition: all 0.25s ease;
-}
 
-.filter-btn:hover {
-    border-color: var(--gallery-light-blue);
-    color: var(--gallery-light-blue);
-}
+        <!-- EXPLORE -->
+        <div class="footer-column">
+            <h4>Explore</h4>
 
-.filter-btn.active {
-    background: var(--gallery-blue);
-    border-color: var(--gallery-blue);
+            <a href="../">Home</a>
+            <a href="../Apartments_Section/">Apartments</a>
+            <a href="../Gallery_Section/">Gallery</a>
+            <a href="../About_Section/">About Us</a>
+        </div>
 
-    color: #ffffff;
-}
 
+        <!-- SERVICES -->
+        <div class="footer-column">
+            <h4>Our Services</h4>
 
-/* =========================================
-   GALLERY GRID
-========================================= */
+            <a href="../Apartments_Section/">Shortlet Apartments</a>
+            <a href="../Book_now_Section/">Book a Stay</a>
+            <a href="../Contact_Section/">Contact Us</a>
+            <a href="../Book_now_Section/">Office Spaces</a>
+        </div>
 
-.gallery-grid {
-    display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
+        <!-- CONTACT -->
+        <div class="footer-column footer-contact">
+            <h4>Get in Touch</h4>
 
-    grid-auto-rows: 260px;
+            <p>
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Ayobo, Lagos</span>
+            </p>
 
-    gap: 14px;
-}
+            <p>
+                <i class="fa-solid fa-phone"></i>
+                <a href="tel:07084247022">+234 708 424 7022</a>
+            </p>
 
+            <p>
+                <i class="fa-solid fa-envelope"></i>
+                <a href="mailto:bookings@safedgeapartments.com">
+                    bookings@safedgeapartments.com
+                </a>
+            </p>
+        </div>
 
-/* =========================================
-   GALLERY ITEMS
-========================================= */
+    </div>
 
-.gallery-item {
-    position: relative;
 
-    overflow: hidden;
+    <!-- BOTTOM BAR -->
+    <div class="footer-bottom">
 
-    border-radius: 12px;
+        <p>
+            © 2026 SafeEdge Apartments. All rights reserved.
+        </p>
 
-    background: #f2f5f8;
+        <a href="../Book_now_Section/">
+            Book Your Stay
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
 
-    cursor: pointer;
-}
+    </div>
 
-.gallery-item.gallery-large {
-    grid-row: span 2;
-}
+</footer>
 
-.gallery-item.gallery-wide {
-    grid-column: span 2;
-}
 
-.gallery-item img {
-    width: 100%;
-    height: 100%;
 
-    display: block;
 
-    object-fit: cover;
-    object-position: center;
 
-    transition: transform 0.45s ease;
-}
+    <script src="script.js" defer></script>
 
-
-/* =========================================
-   IMAGE HOVER
-========================================= */
-
-.gallery-item:hover img {
-    transform: scale(1.04);
-}
-
-
-/* =========================================
-   OVERLAY
-========================================= */
-
-.gallery-overlay {
-    position: absolute;
-
-    inset: 0;
-
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-
-    padding: 22px;
-
-    background:
-        linear-gradient(
-            to top,
-            rgba(7, 26, 51, 0.82),
-            rgba(7, 26, 51, 0.12) 55%,
-            transparent
-        );
-
-    opacity: 0;
-
-    transition: opacity 0.3s ease;
-}
-
-.gallery-item:hover .gallery-overlay {
-    opacity: 1;
-}
-
-.gallery-overlay span {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: #9ed5ff;
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.gallery-overlay h3 {
-    margin: 0;
-
-    color: #ffffff;
-
-    font-size: 16px;
-    font-weight: 600;
-}
-
-
-/* =========================================
-   VIEW BUTTON
-========================================= */
-
-.gallery-view {
-    width: 40px;
-    height: 40px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink: 0;
-
-    border: 1px solid rgba(255,255,255,0.5);
-    border-radius: 50%;
-
-    background: rgba(255,255,255,0.12);
-
-    color: #ffffff;
-
-    backdrop-filter: blur(5px);
-
-    cursor: pointer;
-
-    transition: all 0.25s ease;
-}
-
-.gallery-view:hover {
-    background: #ffffff;
-    color: var(--gallery-blue);
-}
-
-
-/* =========================================
-   LIGHTBOX
-========================================= */
-
-.gallery-lightbox {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 9999;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 40px;
-
-    background: rgba(3, 12, 25, 0.96);
-
-    opacity: 0;
-    visibility: hidden;
-
-    transition: opacity 0.3s ease,
-                visibility 0.3s ease;
-}
-
-.gallery-lightbox.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-
-/* =========================================
-   LIGHTBOX CONTENT
-========================================= */
-
-.lightbox-content {
-    max-width: 1100px;
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.lightbox-content img {
-    max-width: 100%;
-    max-height: 78vh;
-
-    width: auto;
-    height: auto;
-
-    object-fit: contain;
-
-    border-radius: 6px;
-
-    box-shadow: 0 20px 70px rgba(0,0,0,0.4);
-}
-
-.lightbox-caption {
-    width: 100%;
-
-    margin-top: 15px;
-
-    text-align: center;
-}
-
-.lightbox-caption span {
-    color: #8bcfff;
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-}
-
-.lightbox-caption h3 {
-    margin: 5px 0 0;
-
-    color: #ffffff;
-
-    font-size: 18px;
-    font-weight: 500;
-}
-
-
-/* =========================================
-   LIGHTBOX BUTTONS
-========================================= */
-
-.lightbox-close,
-.lightbox-prev,
-.lightbox-next {
-    position: absolute;
-
-    width: 44px;
-    height: 44px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 50%;
-
-    background: rgba(255,255,255,0.08);
-
-    color: #ffffff;
-
-    cursor: pointer;
-
-    transition: all 0.25s ease;
-}
-
-.lightbox-close:hover,
-.lightbox-prev:hover,
-.lightbox-next:hover {
-    background: #ffffff;
-    color: var(--gallery-blue);
-}
-
-.lightbox-close {
-    top: 25px;
-    right: 25px;
-}
-
-.lightbox-prev {
-    left: 25px;
-}
-
-.lightbox-next {
-    right: 25px;
-}
-
-
-/* =========================================
-   GALLERY CTA
-========================================= */
-
-.gallery-cta {
-    padding: 70px 7%;
-
-    background: var(--gallery-blue);
-
-    text-align: center;
-}
-
-.gallery-cta-content {
-    max-width: 650px;
-    margin: 0 auto;
-}
-
-.gallery-cta span {
-    color: #8bcfff;
-
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-}
-
-.gallery-cta h2 {
-    margin: 10px 0;
-
-    color: #ffffff;
-
-    font-size: clamp(32px, 5vw, 52px);
-    line-height: 1.1;
-}
-
-.gallery-cta p {
-    max-width: 500px;
-
-    margin: 0 auto 25px;
-
-    color: rgba(255,255,255,0.72);
-
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-.gallery-cta-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-
-    padding: 12px 20px;
-
-    border-radius: 5px;
-
-    background: #ffffff;
-
-    color: var(--gallery-blue);
-
-    font-size: 12px;
-    font-weight: 700;
-
-    text-decoration: none;
-
-    transition: all 0.25s ease;
-}
-
-.gallery-cta-button:hover {
-    background: var(--gallery-light-blue);
-    color: #ffffff;
-}
-
-
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 900px) {
-
-    .gallery-hero {
-        min-height: 380px;
-        padding: 70px 6%;
-    }
-
-    .gallery-section {
-        padding: 65px 6%;
-    }
-
-    .gallery-heading {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 240px;
-    }
-
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 600px) {
-
-    .gallery-hero {
-        min-height: 330px;
-        padding: 60px 7%;
-    }
-
-    .gallery-hero h1 {
-        font-size: 43px;
-        letter-spacing: -1.5px;
-    }
-
-    .gallery-hero p {
-        margin-top: 17px;
-        font-size: 13px;
-    }
-
-
-    .gallery-section {
-        padding: 50px 6%;
-    }
-
-    .gallery-heading {
-        margin-bottom: 25px;
-    }
-
-    .gallery-heading h2 {
-        font-size: 31px;
-    }
-
-
-    .gallery-filters {
-        gap: 6px;
-        margin-bottom: 20px;
-
-        overflow-x: auto;
-        flex-wrap: nowrap;
-
-        padding-bottom: 5px;
-    }
-
-    .filter-btn {
-        flex-shrink: 0;
-        padding: 8px 13px;
-        font-size: 10.5px;
-    }
-
-
-    .gallery-grid {
-        grid-template-columns: 1fr;
-        grid-auto-rows: 250px;
-
-        gap: 10px;
-    }
-
-    .gallery-item.gallery-large,
-    .gallery-item.gallery-wide {
-        grid-column: span 1;
-        grid-row: span 1;
-    }
-
-
-    .gallery-overlay {
-        opacity: 1;
-        padding: 16px;
-
-        background:
-            linear-gradient(
-                to top,
-                rgba(7, 26, 51, 0.8),
-                transparent 65%
-            );
-    }
-
-    .gallery-overlay h3 {
-        font-size: 14px;
-    }
-
-    .gallery-view {
-        width: 35px;
-        height: 35px;
-        font-size: 11px;
-    }
-
-
-    .gallery-lightbox {
-        padding: 20px;
-    }
-
-    .lightbox-content img {
-        max-height: 70vh;
-        border-radius: 4px;
-    }
-
-    .lightbox-close {
-        top: 15px;
-        right: 15px;
-    }
-
-    .lightbox-prev {
-        left: 10px;
-    }
-
-    .lightbox-next {
-        right: 10px;
-    }
-
-    .lightbox-close,
-    .lightbox-prev,
-    .lightbox-next {
-        width: 38px;
-        height: 38px;
-    }
-
-
-    .gallery-cta {
-        padding: 55px 7%;
-    }
-
-}
-
+</body>
+</html>
