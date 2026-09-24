@@ -144,13 +144,6 @@ a {
 }
 
 
-/* MOBILE NAV */
-
-.mobile-nav {
-    display: none;
-}
-
-
 /* HERO */
 
 .about-hero {
@@ -164,12 +157,8 @@ a {
     overflow: hidden;
 
     background:
-        linear-gradient(
-            90deg,
-            rgba(7,26,53,.94),
-            rgba(7,26,53,.58)
-        ),
-        url("../Images/IMG_0081.png");
+
+        url("../Images/thomas-fatin-6oBUCu9FIOc-unsplash.jpg");
 
     background-size: cover;
     background-position: center;
@@ -1290,204 +1279,6 @@ a {
 
 
 
-/* RESPONSIVE */
-
-@media (max-width: 900px) {
-
-    .desktop-nav,
-    .nav-book-btn {
-        display: none;
-    }
-
-    .menu-toggle {
-        display: grid;
-        place-items: center;
-    }
-
-    .mobile-nav {
-        display: flex;
-        flex-direction: column;
-
-        max-height: 0;
-        overflow: hidden;
-
-        background: var(--dark-blue);
-
-        transition: max-height .4s ease;
-    }
-
-    .mobile-nav.open {
-        max-height: 400px;
-    }
-
-    .mobile-nav a {
-        padding: 15px 24px;
-
-        color: white;
-
-        font-size: 12px;
-        font-weight: 600;
-
-        border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-
-    .mobile-book-btn {
-        margin: 15px 24px;
-
-        text-align: center;
-
-        background: var(--light-blue);
-        color: var(--dark-blue) !important;
-
-        border-radius: 7px;
-    }
-
-    .about-container {
-        grid-template-columns: 1fr;
-        gap: 50px;
-    }
-
-    .about-content {
-        max-width: 650px;
-    }
-
-    .features-container {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .feature {
-        padding: 25px;
-        border-bottom: 1px solid var(--light-grey);
-    }
-
-    .feature:nth-child(2) {
-        border-right: none;
-    }
-
-    .feature:nth-child(3),
-    .feature:nth-child(4) {
-        border-bottom: none;
-    }
-
-    .footer-container {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .footer-brand {
-        grid-column: 1 / -1;
-    }
-
-}
-
-
-@media (max-width: 600px) {
-
-    .nav-container {
-        min-height: 68px;
-        padding: 0 18px;
-    }
-
-    .logo img {
-        width: 58px;
-    }
-
-    .about-hero {
-        min-height: 480px;
-    }
-
-    .about-hero-content {
-        padding: 50px 20px 90px;
-    }
-
-    .about-hero h1 {
-        font-size: 42px;
-    }
-
-    .about-main {
-        padding: 70px 18px;
-    }
-
-    .about-image {
-        height: 330px;
-    }
-
-    .about-content h2 {
-        font-size: 36px;
-    }
-
-    .about-features {
-        padding: 50px 18px;
-    }
-
-    .features-container {
-        grid-template-columns: 1fr;
-    }
-
-    .feature {
-        border-right: none !important;
-        border-bottom: 1px solid var(--light-grey) !important;
-    }
-
-    .feature:last-child {
-        border-bottom: none !important;
-    }
-
-    .footer-container {
-        grid-template-columns: 1fr;
-        gap: 35px;
-        padding: 45px 20px 30px;
-    }
-
-    .footer-brand {
-        grid-column: auto;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* =========================================================
    SAFEEDGE APARTMENTS
    ABOUT US PAGE
@@ -2236,12 +2027,8 @@ a {
         min-height: 500px;
 
         background:
-            linear-gradient(
-                90deg,
-                rgba(7, 26, 53, 0.90),
-                rgba(11, 37, 72, 0.55)
-            ),
-            url("../Images/IMG_0081.png") center / cover no-repeat;
+
+            url("../Images/thomas-fatin-6oBUCu9FIOc-unsplash.jpg") center / cover no-repeat;
     }
 
     .about-hero-content {
@@ -2336,6 +2123,183 @@ a {
 
     .about-cta h2 {
         font-size: 35px;
+    }
+}
+
+/* =========================================================
+   SAFEEDGE RESPONSIVE HAMBURGER MENU
+   ========================================================= */
+
+.menu-toggle {
+    display: none;
+
+    width: 42px;
+    height: 42px;
+
+    margin-left: auto;
+    padding: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+    border: 1px solid #E8EEF3;
+    border-radius: 8px;
+
+    color: #071A35;
+    font-size: 20px;
+
+    cursor: pointer;
+    position: relative;
+    z-index: 1100;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.menu-toggle:hover {
+    background: #DDF2FF;
+}
+
+.mobile-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px 5% 20px;
+
+    background: #ffffff;
+    border-top: 1px solid #E8EEF3;
+    border-bottom: 1px solid #E8EEF3;
+
+    box-shadow: 0 15px 35px rgba(7, 26, 53, 0.10);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease,
+        transform 0.25s ease;
+
+    z-index: 999;
+}
+
+.mobile-nav.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mobile-nav > a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 14px 5px;
+
+    color: #071A35;
+    background: transparent;
+    border-bottom: 1px solid #E8EEF3;
+
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        padding-left 0.2s ease,
+        background 0.2s ease;
+}
+
+.mobile-nav > a:hover {
+    color: #1687D9;
+    padding-left: 10px;
+    background: #F4FAFE;
+}
+
+.mobile-nav .mobile-book-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-height: 46px;
+    margin-top: 15px;
+    padding: 12px 18px;
+
+    background: #1687D9;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 7px;
+    text-align: center;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.mobile-nav .mobile-book-btn:hover {
+    padding-left: 18px;
+    background: #071A35;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+@media screen and (max-width: 800px) {
+
+    .desktop-nav {
+        display: none !important;
+    }
+
+    .nav-book-btn {
+        display: none !important;
+    }
+
+    .menu-toggle {
+        display: flex !important;
+    }
+
+    .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+    .menu-toggle {
+        width: 39px;
+        height: 39px;
+        font-size: 18px;
+    }
+
+    .mobile-nav {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .mobile-nav > a {
+        min-height: 46px;
+        padding: 13px 5px;
+        font-size: 14px;
+    }
+
+    .mobile-nav .mobile-book-btn {
+        min-height: 45px;
+        font-size: 14px;
     }
 }
 
