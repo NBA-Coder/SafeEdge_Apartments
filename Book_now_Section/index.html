@@ -213,7 +213,7 @@
             </div>
 
 
-           <form action="https://api.web3forms.com/submit" method="POST">
+           <form id = "bookingForm" action="https://api.web3forms.com/submit" method="POST">
                 <input type="hidden" name="access_key" value="8efa219c-c082-4314-b467-abd947678311">
 
                 <!-- Space -->
@@ -710,46 +710,54 @@ Thank you.
 
     });
 
-    
-
 /* =====================================================
-   CLEAR FORM AFTER SUCCESSFUL SUBMISSION
+   CLEAR & REFRESH FORM WHEN USER RETURNS
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", function () {
+const bookingForm = document.getElementById("bookingForm");
 
-    const forms = document.querySelectorAll("form");
+if (bookingForm) {
 
-    forms.forEach(function (form) {
+    bookingForm.addEventListener("submit", function () {
 
-        form.addEventListener("submit", function () {
-
-            // Wait for the form submission to complete
-            setTimeout(function () {
-
-                // Clear all user-entered fields
-                form.querySelectorAll("input, textarea, select").forEach(function (field) {
-
-                    // Don't clear hidden inputs such as Web3Forms access_key
-                    if (field.type === "hidden") {
-                        return;
-                    }
-
-                    if (field.tagName.toLowerCase() === "select") {
-                        field.selectedIndex = 0;
-                    } else {
-                        field.value = "";
-                    }
-
-                });
-
-            }, 1500);
-
-        });
+        // Remember that the form was submitted
+        sessionStorage.setItem("bookingSubmitted", "true");
 
     });
 
+}
+
+
+/* =====================================================
+   WHEN USER COMES BACK TO THE PAGE
+===================================================== */
+
+window.addEventListener("pageshow", function () {
+
+    if (sessionStorage.getItem("bookingSubmitted") === "true") {
+
+        // Remove the flag first so the page doesn't reload forever
+        sessionStorage.removeItem("bookingSubmitted");
+
+        // Clear all form fields
+        if (bookingForm) {
+            bookingForm.reset();
+        }
+
+        // Refresh the page
+        setTimeout(function () {
+            window.location.reload();
+        }, 100);
+
+    }
+
 });
+
+
+
+
+
+    
 
 </script>
 
