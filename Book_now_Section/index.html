@@ -624,94 +624,8 @@
     });
 
 
-    /* Booking Form */
-
-    const bookingForm = document.getElementById("bookingForm");
-
-    bookingForm.addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        const name = document.getElementById("name").value.trim();
-        const phone = document.getElementById("phone").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const space = document.getElementById("space").value;
-        const guests = document.getElementById("guests").value;
-        const checkInDate = checkin.value;
-        const checkOutDate = checkout.value;
-        const message = document.getElementById("message").value.trim();
-
-        const buttonText = document.getElementById("buttonText");
-        const formMessage = document.getElementById("formMessage");
-
-        if (checkOutDate <= checkInDate) {
-
-            formMessage.textContent =
-                "Please select a valid check-out date.";
-
-            formMessage.className = "form-message error";
-
-            return;
-        }
-
-
-        buttonText.textContent = "Sending...";
-
-
-        /*
-            WhatsApp booking message
-        */
-
-        const whatsappMessage = `
-
-Hello SafeEdge Apartments,
-
-I would like to make a booking.
-
-Name: ${name}
-
-Phone: ${phone}
-
-Email: ${email}
-
-Space: ${space}
-
-Check-in: ${checkInDate}
-
-Check-out: ${checkOutDate}
-
-Guests: ${guests}
-
-Special Request:
-${message || "None"}
-
-Thank you.
-        `;
-
-
-        const whatsappURL =
-            "https://wa.me/2347084247022?text=" +
-            encodeURIComponent(whatsappMessage);
-
-
-        setTimeout(() => {
-
-            buttonText.textContent = "Send Booking Request";
-
-            formMessage.textContent =
-                "Opening WhatsApp to complete your booking request...";
-
-            formMessage.className = "form-message success";
-
-
-            window.open(whatsappURL, "_blank");
-
-        }, 700);
-
-    });
-
 /* =====================================================
-   CLEAR & REFRESH FORM WHEN USER RETURNS
+   BOOKING FORM — WEB3FORMS
 ===================================================== */
 
 const bookingForm = document.getElementById("bookingForm");
@@ -720,8 +634,18 @@ if (bookingForm) {
 
     bookingForm.addEventListener("submit", function () {
 
-        // Remember that the form was submitted
+        /*
+         * Save a flag before Web3Forms takes the user
+         * to the successful submission page.
+         */
         sessionStorage.setItem("bookingSubmitted", "true");
+
+        /*
+         * DO NOT use event.preventDefault().
+         *
+         * This allows the form to submit normally
+         * to Web3Forms.
+         */
 
     });
 
@@ -729,69 +653,34 @@ if (bookingForm) {
 
 
 /* =====================================================
-   WHEN USER COMES BACK TO THE PAGE
+   RESET FORM WHEN USER RETURNS
 ===================================================== */
 
 window.addEventListener("pageshow", function () {
 
-    if (sessionStorage.getItem("bookingSubmitted") === "true") {
+    const submitted = sessionStorage.getItem("bookingSubmitted");
 
-        // Remove the flag first so the page doesn't reload forever
+    if (submitted === "true") {
+
+        /*
+         * Remove the flag so this doesn't run repeatedly.
+         */
         sessionStorage.removeItem("bookingSubmitted");
 
-        // Clear all form fields
+        /*
+         * Clear every field.
+         */
         if (bookingForm) {
             bookingForm.reset();
         }
 
-        // Refresh the page
-        setTimeout(function () {
-            window.location.reload();
-        }, 100);
-
-    }
-
-});
-
-
-
-    /* =====================================================
-   AUTO RELOAD AFTER FORM SUBMISSION
-===================================================== */
-
-const bookingForm = document.getElementById("bookingForm");
-
-if (bookingForm) {
-
-    bookingForm.addEventListener("submit", function () {
-
-        // Mark that the form has been submitted
-        sessionStorage.setItem("bookingSubmitted", "true");
-
-    });
-
-}
-
-
-/* =====================================================
-   RELOAD PAGE WHEN USER RETURNS
-===================================================== */
-
-window.addEventListener("pageshow", function () {
-
-    if (sessionStorage.getItem("bookingSubmitted") === "true") {
-
-        // Remove the flag
-        sessionStorage.removeItem("bookingSubmitted");
-
-        // Reload the page automatically
+        /*
+         * Force a fresh page load.
+         */
         window.location.reload();
-
     }
 
 });
-
-
 
 
     
