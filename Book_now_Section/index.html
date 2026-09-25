@@ -755,6 +755,43 @@ window.addEventListener("pageshow", function () {
 
 
 
+    /* =====================================================
+   AUTO RELOAD AFTER FORM SUBMISSION
+===================================================== */
+
+const bookingForm = document.getElementById("bookingForm");
+
+if (bookingForm) {
+
+    bookingForm.addEventListener("submit", function () {
+
+        // Mark that the form has been submitted
+        sessionStorage.setItem("bookingSubmitted", "true");
+
+    });
+
+}
+
+
+/* =====================================================
+   RELOAD PAGE WHEN USER RETURNS
+===================================================== */
+
+window.addEventListener("pageshow", function () {
+
+    if (sessionStorage.getItem("bookingSubmitted") === "true") {
+
+        // Remove the flag
+        sessionStorage.removeItem("bookingSubmitted");
+
+        // Reload the page automatically
+        window.location.reload();
+
+    }
+
+});
+
+
 
 
     
