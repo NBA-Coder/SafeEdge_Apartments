@@ -685,7 +685,8 @@
        as available. The booking form itself still submits to
        Web3Forms.
     */
-    const SAFEEDGE_AVAILABILITY_API = "";
+const SAFEEDGE_AVAILABILITY_API =
+    "https://script.google.com/macros/s/AKfycbymCCrXjmHCp7ynG-2PDTx_qAgaOl5KZ7j8nGwvT0FEm8ACls7CuDUadz3xkJS3B7HeAw/exec";
 
     const spaceDropdown = document.getElementById("space");
     const availabilityPanel = document.getElementById("availabilityPanel");
@@ -932,7 +933,59 @@
         refreshAvailability();
     }
 
-    /* ================= WEB3FORMS + WHATSAPP ================= */
+    /* ================= GOOGLE SHEETS BOOKING ================= */
+
+async function saveBookingToGoogleSheet({
+    bookingId,
+    name,
+    email,
+    phone,
+    space,
+    roomName,
+    checkinDate,
+    checkoutDate,
+    status
+}) {
+
+    const data = new URLSearchParams();
+
+    data.append("bookingId", bookingId);
+    data.append("name", name);
+    data.append("email", email);
+    data.append("phone", phone);
+    data.append("space", space);
+    data.append("roomName", roomName);
+    data.append("checkinDate", checkinDate);
+    data.append("checkoutDate", checkoutDate);
+    data.append("status", status);
+
+    const response = await fetch(SAFEEDGE_AVAILABILITY_API, {
+        method: "POST",
+        body: data
+    });
+
+    if (!response.ok) {
+        throw new Error("Could not connect to the booking system.");
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+        throw new Error(
+            result.message || "This room is no longer available."
+        );
+    }
+
+    return result;
+}
+
+
+
+
+
+
+
+    /* ================= WEB3FORMS + GOOGLE SHEETS + WHATSAPP ================= */
 
     const bookingForm = document.getElementById("bookingForm");
 
@@ -953,6 +1006,8 @@
             const buttonText = document.getElementById("buttonText");
             const formMessage = document.getElementById("formMessage");
 
+            /* ================= VALIDATION ================= */
+
             if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) {
                 formMessage.textContent = "Please select a valid check-out date.";
                 formMessage.className = "form-message error";
@@ -967,12 +1022,24 @@
 
             buttonText.textContent = "Sending...";
 
+            /* ================= BOOKING ID ================= */
+
+            const bookingId =
+                "SE-" +
+                Date.now() +
+                "-" +
+                Math.random().toString(36).substring(2, 7).toUpperCase();
+
+            const sheetRoomName = selectedRoom || space;
+
+            /* ================= WEB3FORMS ================= */
+
             const formData = new FormData(bookingForm);
 
-            /*
-               Submit to Web3Forms.
-               This keeps your existing access_key and form fields.
-            */
+            // Include the Booking ID and room name in the Web3Forms submission.
+            formData.append("Booking ID", bookingId);
+            formData.append("Room Name", sheetRoomName);
+
             try {
                 const response = await fetch(bookingForm.action, {
                     method: "POST",
@@ -985,7 +1052,9 @@
                 const result = await response.json();
 
                 if (!response.ok || result.success === false) {
-                    throw new Error(result.message || "Web3Forms submission failed.");
+                    throw new Error(
+                        result.message || "Web3Forms submission failed."
+                    );
                 }
 
             } catch (error) {
@@ -995,16 +1064,52 @@
                 formMessage.textContent =
                     "We could not send your booking request. Please try again.";
                 formMessage.className = "form-message error";
+
                 return;
             }
 
+            /* ================= GOOGLE SHEETS ================= */
+
             /*
-               WhatsApp message
-            */
+             * Web3Forms has successfully received the request.
+             * Now perform the server-side room/date check and save
+             * the booking to Google Sheets.
+             */
+            try {
+                await saveBookingToGoogleSheet({
+                    bookingId: bookingId,
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    space: space,
+                    roomName: sheetRoomName,
+                    checkinDate: checkInDate,
+                    checkoutDate: checkOutDate,
+                    status: "Pending"
+                });
+
+            } catch (error) {
+                console.error("Google Sheets booking error:", error);
+
+                buttonText.textContent = "Booking Sent";
+
+                formMessage.textContent =
+                    error.message ||
+                    "Your request was received, but we could not complete the availability record. Please contact SafeEdge to confirm your booking.";
+
+                formMessage.className = "form-message error";
+
+                return;
+            }
+
+            /* ================= WHATSAPP ================= */
+
             const whatsappMessage = `
 Hello SafeEdge Apartments,
 
 I would like to make a booking.
+
+Booking ID: ${bookingId}
 
 Name: ${name}
 Phone: ${phone}
@@ -1024,6 +1129,8 @@ Thank you.
                 "https://wa.me/2347084247022?text=" +
                 encodeURIComponent(whatsappMessage);
 
+            /* ================= SUCCESS ================= */
+
             buttonText.textContent = "Booking Sent";
             formMessage.textContent =
                 "Your booking request has been sent. Opening WhatsApp...";
@@ -1033,10 +1140,6 @@ Thank you.
         });
     }
 
-
-   
-
 </script>
-
 </body>
 </html>
