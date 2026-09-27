@@ -302,6 +302,25 @@
 
                 </div>
 
+                <!-- ROOM AVAILABILITY -->
+                <div class="availability-panel" id="availabilityPanel" aria-live="polite" hidden>
+                    <div class="availability-header">
+                        <div>
+                            <span class="availability-label">ROOM AVAILABILITY</span>
+                            <h4 id="availabilityTitle">Select your dates</h4>
+                        </div>
+                        <span class="availability-status" id="availabilityStatus"></span>
+                    </div>
+
+                    <p class="availability-message" id="availabilityMessage">
+                        Select a space, check-in date and check-out date to see available rooms.
+                    </p>
+
+                    <div class="room-grid" id="roomGrid"></div>
+
+                    <input type="hidden" id="roomName" name="roomName" value="">
+                </div>
+
 
                 <!-- Guests -->
 
@@ -571,6 +590,10 @@
             © 2026 SafeEdge Apartments. All rights reserved.
         </p>
 
+        <a href="../Book_now_Section/">
+            Book Your Stay
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
 
     </div>
 
@@ -579,112 +602,436 @@
 
 
 <script>
-
-    /* Mobile Menu */
+    /* =====================================================
+       SAFEEDGE BOOKING PAGE
+       ROOM AVAILABILITY + FORM HANDLING
+       ===================================================== */
 
     const menuToggle = document.getElementById("menuToggle");
     const mobileNav = document.getElementById("mobileNav");
 
-    menuToggle.addEventListener("click", () => {
+    if (menuToggle && mobileNav) {
+        menuToggle.addEventListener("click", () => {
+            mobileNav.classList.toggle("open");
 
-        mobileNav.classList.toggle("open");
+            const icon = menuToggle.querySelector("i");
 
-        const icon = menuToggle.querySelector("i");
+            if (icon) {
+                icon.classList.toggle("fa-bars");
+                icon.classList.toggle("fa-xmark");
+            }
+        });
+    }
 
-        if (mobileNav.classList.contains("open")) {
-            icon.classList.remove("fa-bars");
-            icon.classList.add("fa-xmark");
-        } else {
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
-        }
-
-    });
-
-
-    /* Date Validation */
+    /* ================= DATE VALIDATION ================= */
 
     const checkin = document.getElementById("checkin");
     const checkout = document.getElementById("checkout");
 
-    const today = new Date().toISOString().split("T")[0];
+    if (checkin && checkout) {
+        const today = new Date().toISOString().split("T")[0];
 
-    checkin.min = today;
-    checkout.min = today;
+        checkin.min = today;
+        checkout.min = today;
 
+        checkin.addEventListener("change", () => {
+            checkout.min = checkin.value || today;
 
-    checkin.addEventListener("change", () => {
+            if (checkout.value && checkout.value <= checkin.value) {
+                checkout.value = "";
+            }
 
-        checkout.min = checkin.value;
+            refreshAvailability();
+        });
 
-        if (checkout.value && checkout.value <= checkin.value) {
-            checkout.value = "";
-        }
-
-    });
-
-
-/* =====================================================
-   BOOKING FORM — WEB3FORMS
-===================================================== */
-
-const bookingForm = document.getElementById("bookingForm");
-
-if (bookingForm) {
-
-    bookingForm.addEventListener("submit", function () {
-
-        /*
-         * Save a flag before Web3Forms takes the user
-         * to the successful submission page.
-         */
-        sessionStorage.setItem("bookingSubmitted", "true");
-
-        /*
-         * DO NOT use event.preventDefault().
-         *
-         * This allows the form to submit normally
-         * to Web3Forms.
-         */
-
-    });
-
-}
-
-
-/* =====================================================
-   RESET FORM WHEN USER RETURNS
-===================================================== */
-
-window.addEventListener("pageshow", function () {
-
-    const submitted = sessionStorage.getItem("bookingSubmitted");
-
-    if (submitted === "true") {
-
-        /*
-         * Remove the flag so this doesn't run repeatedly.
-         */
-        sessionStorage.removeItem("bookingSubmitted");
-
-        /*
-         * Clear every field.
-         */
-        if (bookingForm) {
-            bookingForm.reset();
-        }
-
-        /*
-         * Force a fresh page load.
-         */
-        window.location.reload();
+        checkout.addEventListener("change", refreshAvailability);
     }
 
-});
+    /* ================= ROOM DATA ================= */
 
+    const SAFEEDGE_ROOMS = [
+        "GFA-1L",
+        "GFA-1R",
+        "GFA-2L",
+        "GFA-2R",
+        "FFA-3L",
+        "FFA-3R",
+        "FFA-4L",
+        "FFA-4R"
+    ];
 
-    
+    /*
+       IMPORTANT:
+       Web3Forms receives submissions, but a public GitHub Pages
+       JavaScript file must not contain a private submissions API
+       credential.
 
+       Put your secure availability endpoint here once your
+       Web3Forms "Use the API" documentation gives you the exact
+       submissions endpoint/authentication method.
+
+       Example expected response:
+       {
+           "data": [
+               {
+                   "roomName": "GFA-1L",
+                   "checkin": "2026-09-28",
+                   "checkout": "2026-10-02"
+               }
+           ]
+       }
+
+       Until that endpoint is connected, the UI will show all rooms
+       as available. The booking form itself still submits to
+       Web3Forms.
+    */
+    const SAFEEDGE_AVAILABILITY_API = "";
+
+    const spaceDropdown = document.getElementById("space");
+    const availabilityPanel = document.getElementById("availabilityPanel");
+    const availabilityTitle = document.getElementById("availabilityTitle");
+    const availabilityStatus = document.getElementById("availabilityStatus");
+    const availabilityMessage = document.getElementById("availabilityMessage");
+    const roomGrid = document.getElementById("roomGrid");
+    const roomNameInput = document.getElementById("roomName");
+
+    let currentBookings = [];
+
+    function normalizeDate(value) {
+        if (!value) return null;
+
+        const date = new Date(`${value}T00:00:00`);
+        return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function datesOverlap(existingCheckin, existingCheckout, selectedCheckin, selectedCheckout) {
+        return (
+            existingCheckin < selectedCheckout &&
+            existingCheckout > selectedCheckin
+        );
+    }
+
+    /*
+       This function is deliberately isolated so that the Web3Forms
+       API connection only has to be added here.
+
+       Do NOT put a private Web3Forms management/API secret directly
+       in this browser JavaScript.
+    */
+    async function loadBookings() {
+        if (!SAFEEDGE_AVAILABILITY_API) {
+            return [];
+        }
+
+        const response = await fetch(SAFEEDGE_AVAILABILITY_API, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Availability API returned ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (Array.isArray(result)) {
+            return result;
+        }
+
+        if (Array.isArray(result.data)) {
+            return result.data;
+        }
+
+        return [];
+    }
+
+    function showAvailabilityMessage(text, type = "") {
+        availabilityMessage.textContent = text;
+        availabilityMessage.className = `availability-message ${type}`.trim();
+    }
+
+    function renderRooms(bookedRooms = new Set()) {
+        roomGrid.innerHTML = "";
+
+        let availableCount = SAFEEDGE_ROOMS.filter(
+            room => !bookedRooms.has(room)
+        ).length;
+
+        roomGrid.innerHTML = "";
+
+        SAFEEDGE_ROOMS.forEach(room => {
+            const isBooked = bookedRooms.has(room);
+
+            const label = document.createElement("label");
+            label.className = `room-option${isBooked ? " unavailable" : ""}`;
+
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = "roomChoice";
+            input.value = room;
+            input.disabled = isBooked;
+
+            if (!isBooked) {
+                input.addEventListener("change", () => {
+                    roomNameInput.value = input.value;
+                });
+            }
+
+            const roomText = document.createElement("span");
+            roomText.className = "room-option-name";
+            roomText.textContent = room;
+
+            const roomStatus = document.createElement("span");
+            roomStatus.className = "room-option-status";
+            roomStatus.textContent = isBooked ? "Booked" : "Available";
+
+            label.append(input, roomText, roomStatus);
+            roomGrid.appendChild(label);
+        });
+
+        availabilityStatus.textContent =
+            `${availableCount} of ${SAFEEDGE_ROOMS.length} available`;
+
+        availabilityStatus.className =
+            `availability-status ${availableCount ? "available" : "full"}`;
+
+        return availableCount;
+    }
+
+    async function refreshAvailability() {
+        if (!spaceDropdown || !availabilityPanel) return;
+
+        const space = spaceDropdown.value;
+        const selectedCheckin = normalizeDate(checkin.value);
+        const selectedCheckout = normalizeDate(checkout.value);
+
+        roomNameInput.value = "";
+
+        if (!space) {
+            availabilityPanel.hidden = true;
+            roomGrid.innerHTML = "";
+            return;
+        }
+
+        availabilityPanel.hidden = false;
+        availabilityTitle.textContent = `${space} Availability`;
+
+        /*
+           Room-level availability is currently relevant to the
+           Shared Apartment. For the other spaces, we keep the same
+           panel but explain that the actual unit/workstation list
+           can be configured separately.
+        */
+        if (space !== "Shared Apartment") {
+            roomGrid.innerHTML = "";
+            availabilityStatus.textContent = "";
+            showAvailabilityMessage(
+                `${space} selected. Room-level availability is configured for Shared Apartment.`
+            );
+            return;
+        }
+
+        if (!selectedCheckin || !selectedCheckout || selectedCheckout <= selectedCheckin) {
+            roomGrid.innerHTML = "";
+            availabilityStatus.textContent = "";
+            showAvailabilityMessage(
+                "Select a valid check-in and check-out date to check room availability."
+            );
+            return;
+        }
+
+        showAvailabilityMessage("Checking room availability...");
+
+        try {
+            currentBookings = await loadBookings();
+
+            const bookedRooms = new Set();
+
+            currentBookings.forEach(booking => {
+                const room = String(
+                    booking.roomName ??
+                    booking.RoomName ??
+                    booking.room ??
+                    booking.Room ??
+                    ""
+                ).trim();
+
+                const existingCheckin = normalizeDate(
+                    booking.checkin ??
+                    booking.Checkin ??
+                    booking.CheckinDate ??
+                    booking.checkinDate
+                );
+
+                const existingCheckout = normalizeDate(
+                    booking.checkout ??
+                    booking.Checkout ??
+                    booking.CheckOutDate ??
+                    booking.checkoutDate
+                );
+
+                if (
+                    room &&
+                    existingCheckin &&
+                    existingCheckout &&
+                    datesOverlap(
+                        existingCheckin,
+                        existingCheckout,
+                        selectedCheckin,
+                        selectedCheckout
+                    )
+                ) {
+                    bookedRooms.add(room);
+                }
+            });
+
+            const availableCount = renderRooms(bookedRooms);
+
+            if (availableCount === 0) {
+                showAvailabilityMessage(
+                    "No rooms are available for the selected dates.",
+                    "error"
+                );
+            } else {
+                showAvailabilityMessage(
+                    "Select one of the available rooms below."
+                );
+            }
+
+        } catch (error) {
+            console.error("Availability check failed:", error);
+
+            /*
+               Fail safely. Do not tell the customer that a room is
+               available when the availability service failed.
+            */
+            roomGrid.innerHTML = "";
+            availabilityStatus.textContent = "Check unavailable";
+            availabilityStatus.className = "availability-status full";
+
+            showAvailabilityMessage(
+                "We could not verify room availability right now. Please contact SafeEdge before submitting.",
+                "error"
+            );
+        }
+    }
+
+    if (spaceDropdown) {
+        spaceDropdown.addEventListener("change", refreshAvailability);
+    }
+
+    /* ================= AUTO SELECT SPACE ================= */
+
+    const selectedSpace = localStorage.getItem("selectedSpace");
+
+    if (selectedSpace && spaceDropdown) {
+        spaceDropdown.value = selectedSpace;
+        localStorage.removeItem("selectedSpace");
+        refreshAvailability();
+    }
+
+    /* ================= WEB3FORMS + WHATSAPP ================= */
+
+    const bookingForm = document.getElementById("bookingForm");
+
+    if (bookingForm) {
+        bookingForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const space = spaceDropdown.value;
+            const guests = document.getElementById("guests").value;
+            const checkInDate = checkin.value;
+            const checkOutDate = checkout.value;
+            const message = document.getElementById("message").value.trim();
+            const selectedRoom = roomNameInput.value;
+
+            const buttonText = document.getElementById("buttonText");
+            const formMessage = document.getElementById("formMessage");
+
+            if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) {
+                formMessage.textContent = "Please select a valid check-out date.";
+                formMessage.className = "form-message error";
+                return;
+            }
+
+            if (space === "Shared Apartment" && !selectedRoom) {
+                formMessage.textContent = "Please select an available room.";
+                formMessage.className = "form-message error";
+                return;
+            }
+
+            buttonText.textContent = "Sending...";
+
+            const formData = new FormData(bookingForm);
+
+            /*
+               Submit to Web3Forms.
+               This keeps your existing access_key and form fields.
+            */
+            try {
+                const response = await fetch(bookingForm.action, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || result.success === false) {
+                    throw new Error(result.message || "Web3Forms submission failed.");
+                }
+
+            } catch (error) {
+                console.error("Web3Forms submission error:", error);
+
+                buttonText.textContent = "Send Booking Request";
+                formMessage.textContent =
+                    "We could not send your booking request. Please try again.";
+                formMessage.className = "form-message error";
+                return;
+            }
+
+            /*
+               WhatsApp message
+            */
+            const whatsappMessage = `
+Hello SafeEdge Apartments,
+
+I would like to make a booking.
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email}
+Space: ${space}
+Room: ${selectedRoom || "Not applicable"}
+Check-in: ${checkInDate}
+Check-out: ${checkOutDate}
+Guests: ${guests}
+Special Request:
+${message || "None"}
+
+Thank you.
+            `;
+
+            const whatsappURL =
+                "https://wa.me/2347084247022?text=" +
+                encodeURIComponent(whatsappMessage);
+
+            buttonText.textContent = "Booking Sent";
+            formMessage.textContent =
+                "Your booking request has been sent. Opening WhatsApp...";
+            formMessage.className = "form-message success";
+
+            window.open(whatsappURL, "_blank");
+        });
+    }
 </script>
 
 </body>
