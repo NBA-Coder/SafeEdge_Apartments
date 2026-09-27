@@ -27,7 +27,6 @@
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
-    
 
     
 
@@ -91,7 +90,7 @@
 
             <!-- Background Video -->
             <video class="hero-video" autoplay muted loop playsinline>
-                <source src="Images/IMG_0075_new1.MOV" type="video/mp4">
+                <source src="Images/Video.mov" type="video/mp4">
             </video>
 
             <div class="hero-overlay"></div>
@@ -326,9 +325,11 @@
                                     <span>/ week</span>
                                 </div>
 
-                                <a href="/Book_now_Section/" class="card-btn">
-                                    Book
-                                    <i class="fa-solid fa-arrow-right"></i>
+                                <a href="../Book_now_Section/" 
+                                    class="card-btn"
+                                    onclick="localStorage.setItem('selectedSpace', 'Shared Apartment');">
+                                        Book
+                                        <i class="fa-solid fa-arrow-right"></i>
                                 </a>
 
                             </div>
@@ -343,7 +344,7 @@
 
                         <div class="apartment-image">
 
-                            <img src="Images/Bedroom.jpg"
+                            <img src="Images/IMG_0076.png"
                                 alt="SafeEdge 2 Bedroom Apartment">
 
                             <span class="featured-tag">
@@ -384,8 +385,8 @@
                                 </span>
 
                                 <span>
-                                    <i class="fa-solid fa-tv"></i>
-                                    Smart TV
+                                    <i class="fa-solid fa-bolt"></i>
+                                    24/7 Power
                                 </span>
 
                             </div>
@@ -398,9 +399,11 @@
                                     <span>/ week</span>
                                 </div>
 
-                                <a href="/Book_now_Section/" class="card-btn">
-                                    Book
-                                    <i class="fa-solid fa-arrow-right"></i>
+                               <a href="../Book_now_Section/" 
+                                    class="card-btn"
+                                    onclick="localStorage.setItem('selectedSpace', '2-Bedroom Apartment');">
+                                        Book
+                                        <i class="fa-solid fa-arrow-right"></i>
                                 </a>
 
                             </div>
@@ -408,6 +411,82 @@
                         </div>
 
                     </article>
+
+
+
+
+                    <!-- Office Space -->
+<article class="apartment-card featured-card reveal">
+
+    <div class="apartment-image">
+
+        <img src="Images/PHOTO-2026-09-16-15-36-34.jpg"
+             alt="SafeEdge Office Space">
+
+
+
+        <span class="availability">
+            Available
+        </span>
+
+    </div>
+
+    <div class="apartment-info">
+
+        <span class="apartment-type">
+            OFFICE SPACE
+        </span>
+
+        <h3>Professional Office Space</h3>
+
+        <p>
+            A professional workspace designed
+            for meetings, and productive business activities.
+        </p>
+
+        <div class="apartment-features">
+
+            <span>
+                <i class="fa-solid fa-wifi"></i>
+                Wi-Fi
+            </span>
+
+            <span>
+                <i class="fa-solid fa-bolt"></i>
+                24/7 Power
+            </span>
+
+            <span>
+                <i class="fa-solid fa-chair"></i>
+                Workstation
+            </span>
+
+        </div>
+
+        <div class="apartment-bottom">
+
+            <div class="price">
+
+                <small>From</small>
+
+                <strong>₦7k</strong>
+
+                <span>/ day (minimum of 5 bookings)</span>
+
+            </div>
+
+            <a href="../Book_now_Section/" 
+                class="card-btn"
+                onclick="localStorage.setItem('selectedSpace', 'Shared Office Space');">
+                    Book
+                    <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</article>
 
                 </div>
 
