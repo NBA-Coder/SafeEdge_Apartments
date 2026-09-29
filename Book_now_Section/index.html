@@ -82,6 +82,62 @@
 }
 </style>
 
+<style>
+/* Office hourly time layout */
+.office-time-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+}
+
+.office-time-row .office-field {
+    min-width: 0;
+}
+
+@media (max-width: 600px) {
+    .office-time-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+}
+
+
+/* ================= ROOM / WORKSTATION AVAILABILITY ================= */
+.room-option { display:flex; align-items:center; gap:10px; cursor:pointer; padding:12px 14px; margin-bottom:8px; border:1px solid #e5e5e5; border-radius:10px; background:#fff; transition:0.2s ease; }
+.room-option:hover:not(.unavailable) { border-color:#046307; }
+.room-option input[type="radio"] { cursor:pointer; }
+.room-option-name { flex:1; font-weight:600; }
+.room-option-status { font-size:.82rem; font-weight:700; }
+.room-option.unavailable { cursor:not-allowed; opacity:.65; background:#f3f3f3; border-color:#d8d8d8; }
+.room-option.unavailable .room-option-name, .room-option.unavailable .room-option-status { text-decoration:line-through; }
+.room-option.unavailable input[type="radio"] { cursor:not-allowed; }
+#officeDesk option:disabled { color:#888; background:#eeeeee; text-decoration:line-through; }
+
+/* ================= OFFICE LIVE AVAILABILITY ================= */
+
+#officeDesk option:disabled {
+    color: #999;
+    background: #eeeeee;
+}
+
+.office-desk-status {
+    margin-top: 8px;
+    font-size: 0.88rem;
+}
+
+.office-desk-status.checking {
+    opacity: 0.7;
+}
+
+.office-desk-status.available {
+    color: #046307;
+}
+
+.office-desk-status.error {
+    color: #b01657;
+}
+</style>
 </head>
 
 <body>
@@ -343,27 +399,7 @@
         </div>
     </div>
 
-    <div class="office-field">
-        <label for="officeDesk">
-            Desk
-        </label>
-
-        <div class="input-wrapper">
-            <i class="fa-solid fa-chair"></i>
-
-            <select id="officeDesk" name="Desk">
-                <option value="">
-                    Select a desk
-                </option>
-                <option value="Desk 1">Desk 1</option>
-                <option value="Desk 2">Desk 2</option>
-                <option value="Desk 3">Desk 3</option>
-                <option value="Desk 4">Desk 4</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="office-field">
+<div class="office-field">
         <label for="officeDate">
             Office Date
         </label>
@@ -379,7 +415,7 @@
         </div>
     </div>
 
-    <div class="office-time-fields" id="officeTimeFields">
+<div class="office-time-fields" id="officeTimeFields">
 
         <div class="office-field">
             <label for="officeStartTime">
@@ -399,7 +435,12 @@
             </div>
         </div>
 
-        <div class="office-field">
+
+
+
+
+
+         <div class="office-field">
             <label for="officeEndTime">
                 End Time
             </label>
@@ -417,11 +458,38 @@
             </div>
         </div>
 
+
+
+        
+
+<div class="office-field">
+        <label for="officeDesk">
+            Workstation
+        </label>
+
+        <div class="input-wrapper">
+            <i class="fa-solid fa-chair"></i>
+
+            <select id="officeDesk" name="Workstation" disabled>
+                <option value="">
+                    Select a date first
+                </option>
+                <option value="Workstation 1">Workstation 1</option>
+                <option value="Workstation 2">Workstation 2</option>
+                <option value="Workstation 3">Workstation 3</option>
+                <option value="Workstation 4">Workstation 4</option>
+            </select>
+            <div id="officeDeskStatus" class="office-desk-status" aria-live="polite"></div>
+        </div>
+    </div>
+
+       
+
     </div>
 
     <p class="office-help">
         Office hours are 8:00 AM – 6:00 PM.
-        Hourly bookings can share a desk on the same day when their times do not overlap.
+        Hourly bookings can share a workstation on the same day when their times do not overlap.
     </p>
 
     <p class="office-ui-message" id="officeUiMessage" aria-live="polite"></p>
@@ -824,8 +892,6 @@
 
     /* ================= ROOM DATA ================= */
 
-    /* ================= ROOM / APARTMENT INVENTORY ================= */
-
     const SAFEEDGE_ROOMS = [
         "GFA-1L",
         "GFA-1R",
@@ -838,21 +904,32 @@
     ];
 
     /*
-     * A 2-Bedroom Apartment is made from TWO Shared Apartment rooms.
-     * Both rooms in the group must be free for the 2-bedroom unit
-     * to be available.
-     */
-    const TWO_BEDROOM_GROUPS = {
-        "GFA1": ["GFA-1L", "GFA-1R"],
-        "GFA2": ["GFA-2L", "GFA-2R"],
-        "FFA3": ["FFA-3L", "FFA-3R"],
-        "FFA4": ["FFA-4L", "FFA-4R"]
-    };
+       IMPORTANT:
+       Web3Forms receives submissions, but a public GitHub Pages
+       JavaScript file must not contain a private submissions API
+       credential.
 
-    const TWO_BEDROOM_GROUP_NAMES = Object.keys(TWO_BEDROOM_GROUPS);
+       Put your secure availability endpoint here once your
+       Web3Forms "Use the API" documentation gives you the exact
+       submissions endpoint/authentication method.
 
-    const SAFEEDGE_AVAILABILITY_API =
-        "https://script.google.com/macros/s/AKfycbymCCrXjmHCp7ynG-2PDTx_qAgaOl5KZ7j8nGwvT0FEm8ACls7CuDUadz3xkJS3B7HeAw/exec";
+       Example expected response:
+       {
+           "data": [
+               {
+                   "roomName": "GFA-1L",
+                   "checkin": "2026-09-28",
+                   "checkout": "2026-10-02"
+               }
+           ]
+       }
+
+       Until that endpoint is connected, the UI will show all rooms
+       as available. The booking form itself still submits to
+       Web3Forms.
+    */
+const SAFEEDGE_AVAILABILITY_API =
+    "https://script.google.com/macros/s/AKfycbymCCrXjmHCp7ynG-2PDTx_qAgaOl5KZ7j8nGwvT0FEm8ACls7CuDUadz3xkJS3B7HeAw/exec";
 
     const spaceDropdown = document.getElementById("space");
     const availabilityPanel = document.getElementById("availabilityPanel");
@@ -866,6 +943,7 @@
 
     function normalizeDate(value) {
         if (!value) return null;
+
         const date = new Date(`${value}T00:00:00`);
         return Number.isNaN(date.getTime()) ? null : date;
     }
@@ -877,22 +955,23 @@
         );
     }
 
-    function isCancelledBooking(booking) {
-        const status = String(
-            booking.status ??
-            booking.Status ??
-            ""
-        ).trim().toLowerCase();
+    /*
+       This function is deliberately isolated so that the Web3Forms
+       API connection only has to be added here.
 
-        return status === "cancelled" || status === "canceled";
-    }
-
+       Do NOT put a private Web3Forms management/API secret directly
+       in this browser JavaScript.
+    */
     async function loadBookings() {
-        if (!SAFEEDGE_AVAILABILITY_API) return [];
+        if (!SAFEEDGE_AVAILABILITY_API) {
+            return [];
+        }
 
         const response = await fetch(SAFEEDGE_AVAILABILITY_API, {
             method: "GET",
-            headers: { "Accept": "application/json" }
+            headers: {
+                "Accept": "application/json"
+            }
         });
 
         if (!response.ok) {
@@ -901,9 +980,18 @@
 
         const result = await response.json();
 
-        if (Array.isArray(result)) return result;
-        if (Array.isArray(result.data)) return result.data;
-        if (Array.isArray(result.bookings)) return result.bookings;
+        if (Array.isArray(result)) {
+            return result;
+        }
+
+        /* Google Apps Script returns { success: true, bookings: [...] } */
+        if (Array.isArray(result.bookings)) {
+            return result.bookings;
+        }
+
+        if (Array.isArray(result.data)) {
+            return result.data;
+        }
 
         return [];
     }
@@ -913,82 +1001,28 @@
         availabilityMessage.className = `availability-message ${type}`.trim();
     }
 
-    function getBookingRoomName(booking) {
-        return String(
-            booking.roomName ??
-            booking.RoomName ??
-            booking.room ??
-            booking.Room ??
-            ""
-        ).trim();
-    }
+    const TWO_BEDROOM_GROUPS = {
+        "GFA1": ["GFA-1L", "GFA-1R"],
+        "GFA2": ["GFA-2L", "GFA-2R"],
+        "FFA3": ["FFA-3L", "FFA-3R"],
+        "FFA4": ["FFA-4L", "FFA-4R"]
+    };
 
-    function getBookingCheckin(booking) {
-        return normalizeDate(
-            booking.checkin ??
-            booking.Checkin ??
-            booking.CheckinDate ??
-            booking.checkinDate
-        );
-    }
-
-    function getBookingCheckout(booking) {
-        return normalizeDate(
-            booking.checkout ??
-            booking.Checkout ??
-            booking.CheckOutDate ??
-            booking.checkoutDate
-        );
-    }
-
-    function getBookedSharedRooms(selectedCheckin, selectedCheckout) {
-        const bookedRooms = new Set();
-
-        currentBookings.forEach(booking => {
-            if (isCancelledBooking(booking)) return;
-
-            const room = getBookingRoomName(booking);
-            const existingCheckin = getBookingCheckin(booking);
-            const existingCheckout = getBookingCheckout(booking);
-
-            if (!room || !existingCheckin || !existingCheckout) return;
-
-            if (!datesOverlap(
-                existingCheckin,
-                existingCheckout,
-                selectedCheckin,
-                selectedCheckout
-            )) return;
-
-            /*
-             * A complete 2-bedroom booking blocks BOTH underlying
-             * Shared Apartment rooms.
-             */
-            if (TWO_BEDROOM_GROUPS[room]) {
-                TWO_BEDROOM_GROUPS[room].forEach(sharedRoom => {
-                    bookedRooms.add(sharedRoom);
-                });
-                return;
-            }
-
-            bookedRooms.add(room);
-        });
-
-        return bookedRooms;
-    }
-
-    function renderSharedRooms(bookedRooms = new Set()) {
+    function renderRoomOptions(options, bookedOptions = new Set()) {
         roomGrid.innerHTML = "";
 
-        const availableCount = SAFEEDGE_ROOMS.filter(
-            room => !bookedRooms.has(room)
-        ).length;
+        let availableCount = 0;
 
-        SAFEEDGE_ROOMS.forEach(room => {
-            const isBooked = bookedRooms.has(room);
+        options.forEach(room => {
+            const isBooked = bookedOptions.has(room);
+
+            if (!isBooked) {
+                availableCount++;
+            }
 
             const label = document.createElement("label");
             label.className = `room-option${isBooked ? " unavailable" : ""}`;
+            label.setAttribute("aria-disabled", isBooked ? "true" : "false");
 
             const input = document.createElement("input");
             input.type = "radio";
@@ -1015,7 +1049,7 @@
         });
 
         availabilityStatus.textContent =
-            `${availableCount} of ${SAFEEDGE_ROOMS.length} available`;
+            `${availableCount} of ${options.length} available`;
 
         availabilityStatus.className =
             `availability-status ${availableCount ? "available" : "full"}`;
@@ -1023,24 +1057,28 @@
         return availableCount;
     }
 
-    function renderTwoBedroomApartments(bookedRooms = new Set()) {
+    function renderTwoBedroomOptions(bookedRooms = new Set()) {
         roomGrid.innerHTML = "";
 
+        const groups = Object.keys(TWO_BEDROOM_GROUPS);
         let availableCount = 0;
 
-        TWO_BEDROOM_GROUP_NAMES.forEach(groupName => {
-            const groupRooms = TWO_BEDROOM_GROUPS[groupName];
-            const isBooked = groupRooms.some(room => bookedRooms.has(room));
+        groups.forEach(group => {
+            const underlyingRooms = TWO_BEDROOM_GROUPS[group];
+            const isBooked = underlyingRooms.some(room => bookedRooms.has(room));
 
-            if (!isBooked) availableCount++;
+            if (!isBooked) {
+                availableCount++;
+            }
 
             const label = document.createElement("label");
             label.className = `room-option${isBooked ? " unavailable" : ""}`;
+            label.setAttribute("aria-disabled", isBooked ? "true" : "false");
 
             const input = document.createElement("input");
             input.type = "radio";
             input.name = "roomChoice";
-            input.value = groupName;
+            input.value = group;
             input.disabled = isBooked;
 
             if (!isBooked) {
@@ -1051,7 +1089,7 @@
 
             const roomText = document.createElement("span");
             roomText.className = "room-option-name";
-            roomText.textContent = groupName;
+            roomText.textContent = `${group} 2-Bedroom Apartment`;
 
             const roomStatus = document.createElement("span");
             roomStatus.className = "room-option-status";
@@ -1062,7 +1100,7 @@
         });
 
         availabilityStatus.textContent =
-            `${availableCount} of ${TWO_BEDROOM_GROUP_NAMES.length} available`;
+            `${availableCount} of ${groups.length} available`;
 
         availabilityStatus.className =
             `availability-status ${availableCount ? "available" : "full"}`;
@@ -1079,24 +1117,16 @@
 
         roomNameInput.value = "";
 
-        if (!space) {
+        if (!space || space === "Office Space") {
             availabilityPanel.hidden = true;
             roomGrid.innerHTML = "";
+            availabilityStatus.textContent = "";
+            showAvailabilityMessage("");
             return;
         }
 
         availabilityPanel.hidden = false;
         availabilityTitle.textContent = `${space} Availability`;
-
-        /* Office has its own workstation/date logic. */
-        if (space === "Office Space") {
-            roomGrid.innerHTML = "";
-            availabilityStatus.textContent = "";
-            showAvailabilityMessage(
-                "Office workstation availability is handled by the office booking section."
-            );
-            return;
-        }
 
         if (!selectedCheckin || !selectedCheckout || selectedCheckout <= selectedCheckin) {
             roomGrid.innerHTML = "";
@@ -1112,42 +1142,105 @@
         try {
             currentBookings = await loadBookings();
 
-            const bookedRooms = getBookedSharedRooms(
-                selectedCheckin,
-                selectedCheckout
-            );
+            const bookedRooms = new Set();
+
+            currentBookings.forEach(booking => {
+                const room = String(
+                    booking.roomName ??
+                    booking.RoomName ??
+                    booking.room ??
+                    booking.Room ??
+                    ""
+                ).trim();
+
+                const bookingSpace = String(
+                    booking.space ??
+                    booking.Space ??
+                    ""
+                ).trim();
+
+                const status = String(
+                    booking.status ??
+                    booking.Status ??
+                    ""
+                ).trim().toLowerCase();
+
+                if (status === "cancelled" || status === "canceled") {
+                    return;
+                }
+
+                const existingCheckin = normalizeDate(
+                    booking.checkin ??
+                    booking.Checkin ??
+                    booking.CheckinDate ??
+                    booking.checkinDate
+                );
+
+                const existingCheckout = normalizeDate(
+                    booking.checkout ??
+                    booking.Checkout ??
+                    booking.CheckOutDate ??
+                    booking.checkoutDate
+                );
+
+                if (
+                    !room ||
+                    !existingCheckin ||
+                    !existingCheckout ||
+                    !datesOverlap(
+                        existingCheckin,
+                        existingCheckout,
+                        selectedCheckin,
+                        selectedCheckout
+                    )
+                ) {
+                    return;
+                }
+
+                /*
+                 * A Shared Apartment booking blocks its individual room.
+                 */
+                if (bookingSpace === "Shared Apartment") {
+                    bookedRooms.add(room);
+                }
+
+                /*
+                 * A 2-bedroom booking blocks BOTH rooms belonging to its group.
+                 */
+                if (bookingSpace === "2-Bedroom Apartment") {
+                    const groupRooms = TWO_BEDROOM_GROUPS[room] || [];
+                    groupRooms.forEach(groupRoom => bookedRooms.add(groupRoom));
+                }
+            });
 
             let availableCount;
 
             if (space === "Shared Apartment") {
-                availableCount = renderSharedRooms(bookedRooms);
+                availableCount = renderRoomOptions(
+                    SAFEEDGE_ROOMS,
+                    bookedRooms
+                );
             } else if (space === "2-Bedroom Apartment") {
-                availableCount = renderTwoBedroomApartments(bookedRooms);
-            } else {
-                roomGrid.innerHTML = "";
-                availabilityStatus.textContent = "";
-                showAvailabilityMessage(`${space} selected.`);
-                return;
+                availableCount = renderTwoBedroomOptions(
+                    bookedRooms
+                );
             }
 
             if (availableCount === 0) {
                 showAvailabilityMessage(
-                    space === "2-Bedroom Apartment"
-                        ? "No 2-bedroom apartments are available for the selected dates."
-                        : "No rooms are available for the selected dates.",
+                    `No ${space.toLowerCase()}s are available for the selected dates.`,
                     "error"
                 );
             } else {
                 showAvailabilityMessage(
-                    space === "2-Bedroom Apartment"
-                        ? "Select an available 2-bedroom apartment below. Both shared rooms in the apartment must be free."
-                        : "Select one of the available rooms below."
+                    `Select one of the available ${space === "2-Bedroom Apartment" ? "2-bedroom apartments" : "rooms"} below.`
                 );
             }
 
         } catch (error) {
             console.error("Availability check failed:", error);
 
+            roomNameInput.value = "";
             roomGrid.innerHTML = "";
             availabilityStatus.textContent = "Check unavailable";
             availabilityStatus.className = "availability-status full";
@@ -1217,10 +1310,7 @@
             isOffice
         );
 
-        /*
-         * Apartment check-in/check-out fields are not used
-         * for office bookings.
-         */
+        /* Apartment dates are not used for office bookings. */
         if (apartmentDateRow) {
             apartmentDateRow.style.display =
                 isOffice ? "none" : "";
@@ -1236,10 +1326,6 @@
 
         if (officeBookingType) {
             officeBookingType.required = isOffice;
-        }
-
-        if (officeDesk) {
-            officeDesk.required = isOffice;
         }
 
         if (officeDate) {
@@ -1266,6 +1352,48 @@
             officeEndTime.required = isHourly;
         }
 
+        const hasDate =
+            isOffice &&
+            officeDate &&
+            Boolean(officeDate.value);
+
+        const hasValidHourlyTime =
+            !isHourly ||
+            (
+                officeStartTime &&
+                officeEndTime &&
+                Boolean(officeStartTime.value) &&
+                Boolean(officeEndTime.value) &&
+                officeStartTime.value >= "08:00" &&
+                officeStartTime.value <= "18:00" &&
+                officeEndTime.value >= "08:00" &&
+                officeEndTime.value <= "18:00" &&
+                officeEndTime.value > officeStartTime.value
+            );
+
+        /*
+         * The desk becomes selectable only after:
+         * Full Day: date selected
+         * Hourly: date + valid start/end time selected
+         */
+        if (officeDesk) {
+            const canSelectDesk =
+                hasDate && (!isHourly || hasValidHourlyTime);
+
+            officeDesk.disabled = !canSelectDesk;
+
+            if (!canSelectDesk) {
+                officeDesk.value = "";
+            }
+
+            officeDesk.options[0].textContent =
+                canSelectDesk
+                    ? "Select a workstation"
+                    : isHourly && hasDate
+                        ? "Select valid times first"
+                        : "Select a date first";
+        }
+
         if (!isOffice) {
 
             if (officeBookingType) {
@@ -1274,6 +1402,9 @@
 
             if (officeDesk) {
                 officeDesk.value = "";
+                officeDesk.disabled = true;
+                officeDesk.options[0].textContent =
+                    "Select a date first";
             }
 
             if (officeDate) {
@@ -1297,27 +1428,461 @@
 
         if (officeUiMessage) {
 
-            if (isHourly) {
-
-                officeUiMessage.textContent =
-                    "Choose a time between 8:00 AM and 6:00 PM.";
-
-            } else if (
-                officeBookingType &&
-                officeBookingType.value === "Full Day"
-            ) {
-
-                officeUiMessage.textContent =
-                    "Full Day reserves the selected desk for the entire day.";
-
-            } else {
+            if (!officeBookingType || !officeBookingType.value) {
 
                 officeUiMessage.textContent =
                     "Choose Full Day or Hourly to continue.";
 
+            } else if (!hasDate) {
+
+                officeUiMessage.textContent =
+                    "Select an office date first.";
+
+            } else if (isHourly && !hasValidHourlyTime) {
+
+                officeUiMessage.textContent =
+                    "Choose a valid start and end time between 8:00 AM and 6:00 PM.";
+
+            } else if (isHourly) {
+
+                officeUiMessage.textContent =
+                    "Now choose an available workstation for your selected date and time.";
+
+            } else {
+
+                officeUiMessage.textContent =
+                    "Now choose an available workstation for your selected date.";
             }
         }
     }
+
+
+    /* ================= OFFICE LIVE AVAILABILITY ================= */
+
+    const officeDeskStatus =
+        document.getElementById("officeDeskStatus");
+
+    let officeAvailabilityRequest = 0;
+
+    function officeDateValue(value) {
+        if (!value) return "";
+
+        /*
+         * Google Apps Script returns Office Date as yyyy-MM-dd.
+         * Keep the comparison as a string so timezone conversion
+         * cannot move the date backwards/forwards.
+         */
+        return String(value).trim().substring(0, 10);
+    }
+
+    function officeTimeValue(value) {
+        if (!value) return "";
+
+        const text = String(value).trim();
+
+        /*
+         * Handles values such as:
+         * 09:00
+         * 09:00:00
+         * 9:00 AM
+         */
+        if (/^\d{1,2}:\d{2}/.test(text)) {
+            return text.substring(0, 5);
+        }
+
+        const match = text.match(
+            /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+        );
+
+        if (!match) return text;
+
+        let hour = Number(match[1]);
+        const minute = match[2];
+        const meridiem = match[3].toUpperCase();
+
+        if (meridiem === "PM" && hour !== 12) {
+            hour += 12;
+        }
+
+        if (meridiem === "AM" && hour === 12) {
+            hour = 0;
+        }
+
+        return String(hour).padStart(2, "0") + ":" + minute;
+    }
+
+    function officeBookingConflicts(
+        booking,
+        selectedType,
+        selectedDate,
+        selectedStart,
+        selectedEnd
+    ) {
+
+        const status = String(
+            booking.status ??
+            booking.Status ??
+            ""
+        ).trim().toLowerCase();
+
+        if (
+            status === "cancelled" ||
+            status === "canceled"
+        ) {
+            return false;
+        }
+
+        const bookingSpace = String(
+            booking.space ??
+            booking.Space ??
+            ""
+        ).trim().toLowerCase();
+
+        if (bookingSpace !== "office space") {
+            return false;
+        }
+
+        const existingDesk = String(
+            booking.desk ??
+            booking.Desk ??
+            booking.officeDesk ??
+            booking.OfficeDesk ??
+            booking.roomName ??
+            booking.RoomName ??
+            ""
+        ).trim();
+
+        if (!existingDesk) {
+            return false;
+        }
+
+        const existingDate = officeDateValue(
+            booking.officeDate ??
+            booking.OfficeDate
+        );
+
+        if (!existingDate || existingDate !== selectedDate) {
+            return false;
+        }
+
+        const existingType = String(
+            booking.officeBookingType ??
+            booking.OfficeBookingType ??
+            ""
+        ).trim();
+
+        /*
+         * Full Day blocks that desk for the entire date.
+         */
+        if (existingType === "Full Day") {
+            return true;
+        }
+
+        /*
+         * A new Full Day booking cannot be made if the desk
+         * already has ANY booking on that date.
+         */
+        if (selectedType === "Full Day") {
+            return true;
+        }
+
+        /*
+         * Hourly vs Hourly.
+         */
+        const existingStart = officeTimeValue(
+            booking.startTime ??
+            booking.StartTime ??
+            ""
+        );
+
+        const existingEnd = officeTimeValue(
+            booking.endTime ??
+            booking.EndTime ??
+            ""
+        );
+
+        if (!existingStart || !existingEnd) {
+            /*
+             * An office record on the same desk/date without
+             * usable time information is treated as occupied.
+             */
+            return true;
+        }
+
+        return (
+            existingStart < selectedEnd &&
+            existingEnd > selectedStart
+        );
+    }
+
+    function resetOfficeDeskOptions(message) {
+
+        if (!officeDesk) return;
+
+        officeDesk.value = "";
+        officeDesk.disabled = true;
+
+        Array.from(officeDesk.options).forEach(
+            (option, index) => {
+
+                if (index === 0) return;
+
+                option.disabled = false;
+                option.textContent = option.value;
+            }
+        );
+
+        if (officeDesk.options[0]) {
+            officeDesk.options[0].textContent =
+                message || "Select a workstation";
+        }
+    }
+
+    async function refreshOfficeDeskAvailability() {
+
+        if (
+            !spaceDropdown ||
+            !officeBookingType ||
+            !officeDesk ||
+            !officeDate
+        ) {
+            return;
+        }
+
+        if (spaceDropdown.value !== "Office Space") {
+            resetOfficeDeskOptions("Select a date first");
+
+            if (officeDeskStatus) {
+                officeDeskStatus.textContent = "";
+                officeDeskStatus.className =
+                    "office-desk-status";
+            }
+
+            return;
+        }
+
+        const selectedType =
+            officeBookingType.value;
+
+        const selectedDate =
+            officeDate.value;
+
+        const selectedStart =
+            officeStartTime
+                ? officeStartTime.value
+                : "";
+
+        const selectedEnd =
+            officeEndTime
+                ? officeEndTime.value
+                : "";
+
+        if (!selectedType) {
+            resetOfficeDeskOptions(
+                "Select booking type first"
+            );
+            return;
+        }
+
+        if (!selectedDate) {
+            resetOfficeDeskOptions(
+                "Select a date first"
+            );
+
+            if (officeDeskStatus) {
+                officeDeskStatus.textContent =
+                    "Select an office date first.";
+                officeDeskStatus.className =
+                    "office-desk-status";
+            }
+
+            return;
+        }
+
+        if (
+            selectedType === "Hourly" &&
+            (
+                !selectedStart ||
+                !selectedEnd ||
+                selectedEnd <= selectedStart
+            )
+        ) {
+            resetOfficeDeskOptions(
+                "Select valid times first"
+            );
+
+            if (officeDeskStatus) {
+                officeDeskStatus.textContent =
+                    "Select a valid start and end time first.";
+                officeDeskStatus.className =
+                    "office-desk-status";
+            }
+
+            return;
+        }
+
+        const requestId =
+            ++officeAvailabilityRequest;
+
+        resetOfficeDeskOptions(
+            "Checking availability..."
+        );
+
+        if (officeDeskStatus) {
+            officeDeskStatus.textContent =
+                "Checking Google Sheets for booked workstations...";
+            officeDeskStatus.className =
+                "office-desk-status checking";
+        }
+
+        try {
+
+            const bookings =
+                await loadBookings();
+
+            /*
+             * Ignore an older response if the customer has
+             * already changed the date/time.
+             */
+            if (
+                requestId !==
+                officeAvailabilityRequest
+            ) {
+                return;
+            }
+
+            const bookedDesks =
+                new Set();
+
+            bookings.forEach(booking => {
+
+                const desk = String(
+                    booking.desk ??
+                    booking.Desk ??
+                    booking.officeDesk ??
+                    booking.OfficeDesk ??
+                    booking.roomName ??
+                    booking.RoomName ??
+                    ""
+                ).trim();
+
+                if (!desk) return;
+
+                if (
+                    officeBookingConflicts(
+                        booking,
+                        selectedType,
+                        selectedDate,
+                        selectedStart,
+                        selectedEnd
+                    )
+                ) {
+                    bookedDesks.add(desk);
+                }
+
+            });
+
+            let availableCount = 0;
+
+            Array.from(officeDesk.options).forEach(
+                (option, index) => {
+
+                    if (index === 0) return;
+
+                    const desk = option.value;
+
+                    const isBooked =
+                        bookedDesks.has(desk);
+
+                    option.disabled =
+                        isBooked;
+
+                    option.textContent =
+                        isBooked
+                            ? `${desk} — BOOKED`
+                            : desk;
+
+                    if (!isBooked) {
+                        availableCount++;
+                    }
+
+                }
+            );
+
+            /*
+             * If the previously selected desk has become
+             * unavailable, clear it immediately.
+             */
+            if (
+                officeDesk.value &&
+                bookedDesks.has(
+                    officeDesk.value
+                )
+            ) {
+                officeDesk.value = "";
+            }
+
+            if (availableCount > 0) {
+
+                officeDesk.disabled = false;
+
+                if (officeDesk.options[0]) {
+                    officeDesk.options[0].textContent =
+                        "Select a workstation";
+                }
+
+                if (officeDeskStatus) {
+                    officeDeskStatus.textContent =
+                        `${availableCount} of 4 workstations available.`;
+                    officeDeskStatus.className =
+                        "office-desk-status available";
+                }
+
+            } else {
+
+                officeDesk.disabled = true;
+
+                if (officeDesk.options[0]) {
+                    officeDesk.options[0].textContent =
+                        "No workstations available";
+                }
+
+                if (officeDeskStatus) {
+                    officeDeskStatus.textContent =
+                        "No workstations are available for the selected date and time.";
+                    officeDeskStatus.className =
+                        "office-desk-status error";
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Office availability check failed:",
+                error
+            );
+
+            /*
+             * IMPORTANT:
+             * Fail closed. We do NOT show desks as available
+             * if Google Sheets cannot be checked.
+             */
+            resetOfficeDeskOptions(
+                "Availability unavailable"
+            );
+
+            if (officeDeskStatus) {
+                officeDeskStatus.textContent =
+                    "We could not verify workstation availability. Please try again.";
+                officeDeskStatus.className =
+                    "office-desk-status error";
+            }
+
+        }
+
+    }
+
 
     if (spaceDropdown) {
         spaceDropdown.addEventListener(
@@ -1330,6 +1895,47 @@
         officeBookingType.addEventListener(
             "change",
             updateOfficeFields
+        );
+
+        officeBookingType.addEventListener(
+            "change",
+            refreshOfficeDeskAvailability
+        );
+    }
+
+    if (officeDate) {
+        officeDate.addEventListener(
+            "change",
+            updateOfficeFields
+        );
+
+        officeDate.addEventListener(
+            "change",
+            refreshOfficeDeskAvailability
+        );
+    }
+
+    if (officeStartTime) {
+        officeStartTime.addEventListener(
+            "change",
+            updateOfficeFields
+        );
+
+        officeStartTime.addEventListener(
+            "change",
+            refreshOfficeDeskAvailability
+        );
+    }
+
+    if (officeEndTime) {
+        officeEndTime.addEventListener(
+            "change",
+            updateOfficeFields
+        );
+
+        officeEndTime.addEventListener(
+            "change",
+            refreshOfficeDeskAvailability
         );
     }
 
@@ -1346,7 +1952,12 @@ async function saveBookingToGoogleSheet({
     roomName,
     checkinDate,
     checkoutDate,
-    status
+    status,
+    officeBookingType,
+    officeDesk,
+    officeDate,
+    officeStartTime,
+    officeEndTime
 }) {
 
     const data = new URLSearchParams();
@@ -1360,6 +1971,34 @@ async function saveBookingToGoogleSheet({
     data.append("checkinDate", checkinDate);
     data.append("checkoutDate", checkoutDate);
     data.append("status", status);
+
+    if (space === "Office Space") {
+
+        data.append(
+            "officeBookingType",
+            officeBookingType || ""
+        );
+
+        data.append(
+            "desk",
+            officeDesk || ""
+        );
+
+        data.append(
+            "officeDate",
+            officeDate || ""
+        );
+
+        data.append(
+            "startTime",
+            officeStartTime || ""
+        );
+
+        data.append(
+            "endTime",
+            officeEndTime || ""
+        );
+    }
 
     const response = await fetch(SAFEEDGE_AVAILABILITY_API, {
         method: "POST",
@@ -1393,6 +2032,30 @@ async function saveBookingToGoogleSheet({
 
     if (bookingForm) {
         bookingForm.addEventListener("submit", async function(event) {
+
+            /* REQUIRED ROOM / WORKSTATION SELECTION */
+            const selectedSpaceForValidation = spaceDropdown ? spaceDropdown.value : "";
+            const selectedRoomForValidation = roomNameInput ? roomNameInput.value.trim() : "";
+
+            if (selectedSpaceForValidation === "Office Space") {
+                const selectedWorkstation = officeDesk ? officeDesk.value.trim() : "";
+                if (!selectedWorkstation) {
+                    event.preventDefault();
+                    if (formMessage) {
+                        formMessage.textContent = "Please select an available workstation before submitting your booking.";
+                        formMessage.className = "form-message error";
+                    }
+                    return;
+                }
+            } else if (!selectedRoomForValidation) {
+                event.preventDefault();
+                if (formMessage) {
+                    formMessage.textContent = "Please select an available room before submitting your booking.";
+                    formMessage.className = "form-message error";
+                }
+                return;
+            }
+
             event.preventDefault();
 
             const name = document.getElementById("name").value.trim();
@@ -1410,7 +2073,7 @@ async function saveBookingToGoogleSheet({
 
             /* ================= VALIDATION ================= */
 
-            if (space === "Shared Apartment") {
+            if (space === "Shared Apartment" || space === "2-Bedroom Apartment") {
 
                 if (
                     !checkInDate ||
@@ -1429,40 +2092,9 @@ async function saveBookingToGoogleSheet({
                 if (!selectedRoom) {
 
                     formMessage.textContent =
-                        "Please select an available room.";
-
-                    formMessage.className =
-                        "form-message error";
-
-                    return;
-                }
-            }
-
-
-            /* ================= 2-BEDROOM VALIDATION ================= */
-
-            if (space === "2-Bedroom Apartment") {
-
-                if (
-                    !checkInDate ||
-                    !checkOutDate ||
-                    checkOutDate <= checkInDate
-                ) {
-                    formMessage.textContent =
-                        "Please select a valid check-out date.";
-
-                    formMessage.className =
-                        "form-message error";
-
-                    return;
-                }
-
-                if (
-                    !selectedRoom ||
-                    !TWO_BEDROOM_GROUPS[selectedRoom]
-                ) {
-                    formMessage.textContent =
-                        "Please select an available 2-bedroom apartment.";
+                        space === "2-Bedroom Apartment"
+                            ? "Please select an available 2-bedroom apartment."
+                            : "Please select an available room.";
 
                     formMessage.className =
                         "form-message error";
@@ -1515,7 +2147,7 @@ async function saveBookingToGoogleSheet({
                 if (!desk) {
 
                     formMessage.textContent =
-                        "Please select a desk.";
+                        "Please select an available workstation.";
 
                     formMessage.className =
                         "form-message error";
@@ -1683,7 +2315,37 @@ async function saveBookingToGoogleSheet({
                     roomName: sheetRoomName,
                     checkinDate: checkInDate,
                     checkoutDate: checkOutDate,
-                    status: "Pending"
+                    status: "Pending",
+
+                    officeBookingType:
+                        space === "Office Space" &&
+                        officeBookingType
+                            ? officeBookingType.value
+                            : "",
+
+                    officeDesk:
+                        space === "Office Space" &&
+                        officeDesk
+                            ? officeDesk.value
+                            : "",
+
+                    officeDate:
+                        space === "Office Space" &&
+                        officeDate
+                            ? officeDate.value
+                            : "",
+
+                    officeStartTime:
+                        space === "Office Space" &&
+                        officeStartTime
+                            ? officeStartTime.value
+                            : "",
+
+                    officeEndTime:
+                        space === "Office Space" &&
+                        officeEndTime
+                            ? officeEndTime.value
+                            : ""
                 });
 
             } catch (error) {
@@ -1706,6 +2368,89 @@ async function saveBookingToGoogleSheet({
             formMessage.textContent =
                 "Your booking request has been submitted successfully. We will contact you to confirm your booking.";
             formMessage.className = "form-message success";
+
+            /*
+             * The booking has now been accepted by Web3Forms and
+             * recorded by Google Sheets. Reset the customer-facing
+             * form immediately so the page is ready for a completely
+             * new booking.
+             *
+             * The success message is NOT removed here.
+             */
+
+            bookingForm.reset();
+
+            /* Clear the selected room and dynamic room controls. */
+            if (roomNameInput) {
+                roomNameInput.value = "";
+            }
+
+            if (roomGrid) {
+                roomGrid.innerHTML = "";
+            }
+
+            currentBookings = [];
+
+            /* Reset availability panel. */
+            if (availabilityPanel) {
+                availabilityPanel.hidden = true;
+            }
+
+            if (availabilityTitle) {
+                availabilityTitle.textContent = "Select your dates";
+            }
+
+            if (availabilityStatus) {
+                availabilityStatus.textContent = "";
+                availabilityStatus.className = "availability-status";
+            }
+
+            if (availabilityMessage) {
+                availabilityMessage.textContent = "";
+                availabilityMessage.className = "availability-message";
+            }
+
+            /* Reset office booking fields. */
+            if (officeBookingType) {
+                officeBookingType.value = "";
+            }
+
+            if (officeDate) {
+                officeDate.value = "";
+            }
+
+            if (officeStartTime) {
+                officeStartTime.value = "";
+            }
+
+            if (officeEndTime) {
+                officeEndTime.value = "";
+            }
+
+            if (officeDesk) {
+                officeDesk.value = "";
+                officeDesk.disabled = true;
+            }
+
+            if (officeDeskStatus) {
+                officeDeskStatus.textContent =
+                    "Select your date and booking time to see available workstations.";
+                officeDeskStatus.className = "office-desk-status";
+            }
+
+            if (officeUiMessage) {
+                officeUiMessage.textContent = "";
+            }
+
+            if (typeof resetOfficeDeskOptions === "function") {
+                resetOfficeDeskOptions("Select a date first");
+            }
+
+            /* Re-apply the normal initial office UI state. */
+            updateOfficeFields();
+
+            /* Reset the button so another booking can be submitted. */
+            buttonText.textContent = "Send Booking Request";
 
         });
     }
