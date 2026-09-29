@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeEdge | Booking Dashboard</title>
+<style>
+:root {
+    --blue:#1677B8;
+    --blue-dark:#0F5F94;
+    --blue-light:#EAF5FC;
+    --text:#17212b;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --bg:#f5f8fb;
+    --white:#fff;
+    --green:#198754;
+    --orange:#d97706;
+    --red:#dc3545;
+}
+* { box-sizing:border-box; }
+body {
+    margin:0;
+    font-family:Inter,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+.header {
+    background:var(--white);
+    border-bottom:1px solid var(--border);
+    padding:18px 28px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+.brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+.logo {
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:var(--blue);
+    color:#fff;
+    display:grid;
+    place-items:center;
+    font-weight:800;
+    font-size:20px;
+}
+.brand h1 { margin:0; font-size:20px; }
+.brand span { color:var(--muted); font-size:13px; }
+.refresh-btn {
+    border:0;
+    background:var(--blue);
+    color:#fff;
+    border-radius:9px;
+    padding:11px 17px;
+    font-weight:700;
+    cursor:pointer;
+}
+.refresh-btn:hover { background:var(--blue-dark); }
+.container {
+    width:min(1400px,94%);
+    margin:30px auto 50px;
+}
+.page-title h2 { margin:0 0 6px; font-size:28px; }
+.page-title p { margin:0 0 24px; color:var(--muted); }
+.cards {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:22px;
+}
+.card {
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+}
+.card .label { color:var(--muted); font-size:13px; }
+.card .number { font-size:30px; font-weight:800; margin-top:7px; }
+.toolbar {
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr auto;
+    gap:10px;
+    margin-bottom:16px;
+}
+input,select {
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:11px 12px;
+    background:#fff;
+    outline:none;
+}
+input:focus,select:focus { border-color:var(--blue); }
+.table-wrap {
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:auto;
+}
+table {
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+th,td {
+    padding:14px 13px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:14px;
+    white-space:nowrap;
+}
+th {
+    background:#f8fafc;
+    color:#4b5563;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+tr:last-child td { border-bottom:0; }
+.status {
+    display:inline-flex;
+    align-items:center;
+    border-radius:999px;
+    padding:5px 10px;
+    font-size:12px;
+    font-weight:700;
+}
+.status.pending { background:#fff7e6; color:var(--orange); }
+.status.confirmed { background:#e9f8ef; color:var(--green); }
+.status.cancelled { background:#fdecec; color:var(--red); }
+.status.completed { background:var(--blue-light); color:var(--blue-dark); }
+.status.other { background:#eef2f7; color:#475569; }
+.empty,.loading,.error {
+    padding:35px;
+    text-align:center;
+    color:var(--muted);
+}
+.error { color:var(--red); }
+.last-updated {
+    margin-top:10px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+
+.availability-section {
+    margin-bottom:22px;
+}
+.availability-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:12px;
+}
+.availability-header h3 {
+    margin:0;
+    font-size:19px;
+}
+.availability-date {
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.availability-date label {
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+}
+.availability-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+.desk-card {
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:17px;
+    min-height:145px;
+}
+.desk-card.available {
+    border-top:4px solid var(--green);
+}
+.desk-card.booked {
+    border-top:4px solid var(--red);
+}
+.desk-card.partial {
+    border-top:4px solid var(--orange);
+}
+.desk-card h4 {
+    margin:0 0 7px;
+    font-size:17px;
+}
+.desk-status {
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:12px;
+}
+.desk-status.available-text { color:var(--green); }
+.desk-status.booked-text { color:var(--red); }
+.desk-status.partial-text { color:var(--orange); }
+.desk-booking {
+    border-top:1px solid var(--border);
+    padding-top:9px;
+    margin-top:9px;
+    font-size:12px;
+}
+.desk-booking strong {
+    display:block;
+    margin-bottom:3px;
+}
+.availability-empty {
+    color:var(--muted);
+    font-size:12px;
+}
+
+.booking-modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000}
+.booking-modal.show{display:flex}
+.booking-modal-card{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.booking-modal-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:22px 24px;border-bottom:1px solid var(--border)}
+.booking-modal-header h3{margin:0 0 5px;font-size:21px}
+.booking-modal-header p{margin:0;color:var(--muted);font-size:13px}
+.modal-close{width:36px;height:36px;border:0;border-radius:9px;background:#f1f5f9;cursor:pointer;font-size:20px}
+.booking-details{padding:22px 24px}
+.detail-section{margin-bottom:20px}.detail-section:last-child{margin-bottom:0}
+.detail-section h4{margin:0 0 11px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-item{background:#f8fafc;border-radius:10px;padding:12px}
+.detail-item.full{grid-column:1/-1}
+.detail-label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+.detail-value{font-size:14px;font-weight:700;overflow-wrap:anywhere}
+.modal-actions{display:flex;flex-wrap:wrap;gap:8px;padding:18px 24px;border-top:1px solid var(--border)}
+.view-booking-btn{border:0;background:var(--blue-light);color:var(--blue-dark);border-radius:8px;padding:8px 11px;font-weight:700;cursor:pointer}
+.view-booking-btn:hover{background:#dceef9}
+@media(max-width:600px){.detail-grid{grid-template-columns:1fr}.detail-item.full{grid-column:auto}.booking-modal-header,.booking-details,.modal-actions{padding-left:17px;padding-right:17px}}
+@media(max-width:900px) {
+    .availability-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:600px) {
+    .availability-header {
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .availability-date {
+        width:100%;
+    }
+    .availability-date input {
+        flex:1;
+    }
+    .availability-grid { grid-template-columns:1fr; }
+}
+
+.action-cell {
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    min-width:170px;
+}
+.action-btn {
+    border:0;
+    border-radius:7px;
+    padding:7px 10px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+}
+.action-btn.confirm { background:#e9f8ef; color:#198754; }
+.action-btn.cancel { background:#fdecec; color:#dc3545; }
+.action-btn.complete { background:#eaf5fc; color:#0f5f94; }
+.action-btn:disabled { opacity:.55; cursor:not-allowed; }
+.action-btn:hover:not(:disabled) { filter:brightness(.96); }
+@media(max-width:900px) {
+    .cards { grid-template-columns:repeat(2,1fr); }
+    .toolbar { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:600px) {
+    .header { padding:15px; }
+    .container { width:94%; margin-top:22px; }
+    .cards { grid-template-columns:1fr 1fr; gap:10px; }
+    .card { padding:15px; }
+    .card .number { font-size:24px; }
+    .toolbar { grid-template-columns:1fr; }
+}
+
+/* =========================
+   PHASE 9 — ADMIN LOGIN
+   ========================= */
+
+#loginScreen {
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:var(--bg);
+}
+
+.login-card {
+    width:min(420px,100%);
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:32px;
+    box-shadow:0 20px 60px rgba(15,23,42,.12);
+}
+
+.login-logo {
+    width:52px;
+    height:52px;
+    border-radius:13px;
+    background:var(--blue);
+    color:#fff;
+    display:grid;
+    place-items:center;
+    font-size:24px;
+    font-weight:800;
+    margin-bottom:18px;
+}
+
+.login-card h2 {
+    margin:0 0 6px;
+    font-size:25px;
+}
+
+.login-card p {
+    margin:0 0 22px;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.login-card input {
+    margin-bottom:12px;
+}
+
+.login-button {
+    width:100%;
+    border:0;
+    border-radius:9px;
+    padding:12px;
+    background:var(--blue);
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.login-button:hover {
+    background:var(--blue-dark);
+}
+
+.login-button:disabled {
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.login-error {
+    min-height:18px;
+    margin:0 0 10px !important;
+    color:var(--red) !important;
+    font-size:13px !important;
+}
+
+#adminApp[hidden] {
+    display:none !important;
+}
+
+.logout-btn {
+    border:0;
+    background:#f1f5f9;
+    color:#334155;
+    border-radius:9px;
+    padding:10px 14px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.logout-btn:hover {
+    background:#e2e8f0;
+}
+
+@media(max-width:600px) {
+    .login-card {
+        padding:24px;
+    }
+
+    .header {
+        flex-wrap:wrap;
+    }
+
+    .header-actions {
+        width:100%;
+        display:flex;
+        gap:8px;
+    }
+
+    .header-actions button {
+        flex:1;
+    }
+}
+
+</style>
+</head>
+<body>
+
+
+<div id="loginScreen">
+    <div class="login-card">
+        <div class="login-logo">S</div>
+        <h2>SafeEdge Admin</h2>
+        <p>Sign in to access the booking dashboard.</p>
+
+        <form id="loginForm">
+            <input
+                type="email"
+                id="adminEmail"
+                placeholder="Admin Email"
+                autocomplete="username"
+                required
+            >
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Password"
+                autocomplete="current-password"
+                required
+            >
+
+            <p id="loginError" class="login-error"></p>
+
+            <button
+                class="login-button"
+                id="loginButton"
+                type="submit"
+            >
+                Login
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="adminApp" hidden>
+
+<header class="header">
+    <div class="brand">
+        <div class="logo">S</div>
+        <div>
+            <h1>SafeEdge Apartments</h1>
+            <span>Booking Management</span>
+        </div>
+    </div>
+    <div class="header-actions">
+        <button class="refresh-btn" id="refreshBtn">↻ Refresh</button>
+        <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+    </div>
+</header>
+
+<main class="container">
+    <section class="page-title">
+        <h2>Booking Dashboard</h2>
+        <p>View current apartment and office bookings from the SafeEdge booking system.</p>
+    </section>
+
+    <section class="cards">
+        <div class="card">
+            <div class="label">Total Bookings</div>
+            <div class="number" id="totalCount">0</div>
+        </div>
+        <div class="card">
+            <div class="label">Pending</div>
+            <div class="number" id="pendingCount">0</div>
+        </div>
+        <div class="card">
+            <div class="label">Confirmed</div>
+            <div class="number" id="confirmedCount">0</div>
+        </div>
+        <div class="card">
+            <div class="label">Office Bookings</div>
+            <div class="number" id="officeCount">0</div>
+        </div>
+    </section>
+
+    <section class="availability-section">
+        <div class="availability-header">
+            <h3>Office Workstation Availability</h3>
+            <div class="availability-date">
+                <label for="availabilityDate">Date</label>
+                <input id="availabilityDate" type="date">
+            </div>
+        </div>
+
+        <div class="availability-grid" id="availabilityGrid"></div>
+    </section>
+
+    <section class="toolbar">
+        <input id="searchInput" type="search"
+               placeholder="Search booking ID, customer, email, phone or workstation...">
+
+        <select id="spaceFilter">
+            <option value="">All Spaces</option>
+            <option value="Office Space">Office Space</option>
+        </select>
+
+        <select id="deskFilter">
+            <option value="">All Workstations / Rooms</option>
+            <option value="Workstation 1">Workstation 1</option>
+            <option value="Workstation 2">Workstation 2</option>
+            <option value="Workstation 3">Workstation 3</option>
+            <option value="Workstation 4">Workstation 4</option>
+        </select>
+
+        <select id="bookingTypeFilter">
+            <option value="">All Booking Types</option>
+            <option value="Full Day">Full Day</option>
+            <option value="Hourly">Hourly</option>
+        </select>
+
+        <select id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Completed">Completed</option>
+        </select>
+
+        <input id="dateFilter" type="date">
+
+        <button class="refresh-btn" id="clearFilters">Clear</button>
+    </section>
+
+    <section class="table-wrap">
+        <div id="state" class="loading">Loading bookings...</div>
+        <table id="bookingTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Contact</th>
+                    <th>Space</th>
+                    <th>Workstation / Room</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bookingBody"></tbody>
+        </table>
+    </section>
+
+    <div class="last-updated" id="lastUpdated"></div>
+</main>
+
+<div class="booking-modal" id="bookingModal" aria-hidden="true">
+  <div class="booking-modal-card" role="dialog" aria-modal="true">
+    <div class="booking-modal-header">
+      <div><h3>Booking Details</h3><p id="bookingModalSubtitle"></p></div>
+      <button class="modal-close" id="modalClose" type="button">×</button>
+    </div>
+    <div class="booking-details" id="bookingDetails"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbymCCrXjmHCp7ynG-2PDTx_qAgaOl5KZ7j8nGwvT0FEm8ACls7CuDUadz3xkJS3B7HeAw/exec";
+let bookings = [];
+
+const state = document.getElementById("state");
+const table = document.getElementById("bookingTable");
+const body = document.getElementById("bookingBody");
+
+function esc(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function statusClass(status) {
+    const s = String(status || "").toLowerCase();
+    if (s === "pending") return "pending";
+    if (s === "confirmed") return "confirmed";
+    if (s === "cancelled" || s === "canceled") return "cancelled";
+    if (s === "completed") return "completed";
+    return "other";
+}
+
+function getBookingDate(b) {
+    return b.space === "Office Space"
+        ? (b.officeDate || "")
+        : (b.checkinDate || "");
+}
+
+function normalizeWorkstation(value) {
+    const text = String(value || "").trim();
+    const match = text.match(/^Desk\s*(\d+)$/i);
+    return match ? `Workstation ${match[1]}` : text;
+}
+
+function getPlace(b) {
+    return b.space === "Office Space"
+        ? normalizeWorkstation(b.desk || "—")
+        : (b.roomName || "—");
+}
+
+function getType(b) {
+    if (b.space === "Office Space")
+        return b.officeBookingType || "—";
+    return "Apartment";
+}
+
+function getTime(b) {
+    if (b.space !== "Office Space") return "—";
+    if (b.officeBookingType === "Full Day") return "Full Day";
+    if (b.startTime || b.endTime)
+        return `${b.startTime || "—"} – ${b.endTime || "—"}`;
+    return "—";
+}
+
+function updateSummary(list) {
+    document.getElementById("totalCount").textContent = list.length;
+    document.getElementById("pendingCount").textContent =
+        list.filter(b => String(b.status).toLowerCase() === "pending").length;
+    document.getElementById("confirmedCount").textContent =
+        list.filter(b => String(b.status).toLowerCase() === "confirmed").length;
+    document.getElementById("officeCount").textContent =
+        list.filter(b => b.space === "Office Space").length;
+}
+
+async function updateBookingStatus(bookingId, newStatus, button) {
+
+    const token =
+        sessionStorage.getItem("safeEdgeAdminToken");
+
+    if (!token) {
+        showLogin();
+        return;
+    }
+
+    const actionText = newStatus === "Confirmed"
+        ? "confirm this booking"
+        : newStatus === "Cancelled"
+            ? "cancel this booking"
+            : "mark this booking as completed";
+
+    if (!confirm(`Are you sure you want to ${actionText}?`)) {
+        return;
+    }
+
+    if (button) {
+        button.disabled = true;
+    }
+
+    const originalText =
+        button ? button.textContent : "";
+
+    if (button) {
+        button.textContent = "Updating...";
+    }
+
+    try {
+
+        const body = new URLSearchParams({
+            action: "updateStatus",
+            token: token,
+            bookingId: bookingId,
+            status: newStatus
+        });
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            body: body
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to update booking status.");
+        }
+
+        const result = await response.json();
+
+        if (result.authenticated === false) {
+            sessionStorage.removeItem("safeEdgeAdminToken");
+            showLogin();
+            return;
+        }
+
+        if (!result.success) {
+            throw new Error(
+                result.message ||
+                "Booking status update failed."
+            );
+        }
+
+        const booking = bookings.find(
+            b =>
+                String(b.bookingId).trim() ===
+                String(bookingId).trim()
+        );
+
+        if (booking) {
+            booking.status = newStatus;
+        }
+
+        render();
+
+        document.getElementById("lastUpdated").textContent =
+            "Last updated: " + new Date().toLocaleString();
+
+    } catch (error) {
+
+        alert(
+            error.message ||
+            "Unable to update booking status."
+        );
+
+    } finally {
+
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    }
+}
+
+function getActionButtons(b) {
+    const status = String(b.status || "").toLowerCase();
+    const bookingId = esc(b.bookingId);
+
+    if (status === "pending") {
+        return `
+            <div class="action-cell">
+                <button class="action-btn confirm"
+                        data-booking-id="${bookingId}"
+                        data-status="Confirmed">Confirm</button>
+                <button class="action-btn cancel"
+                        data-booking-id="${bookingId}"
+                        data-status="Cancelled">Cancel</button>
+            </div>`;
+    }
+
+    if (status === "confirmed") {
+        return `
+            <div class="action-cell">
+                <button class="action-btn complete"
+                        data-booking-id="${bookingId}"
+                        data-status="Completed">Complete</button>
+                <button class="action-btn cancel"
+                        data-booking-id="${bookingId}"
+                        data-status="Cancelled">Cancel</button>
+            </div>`;
+    }
+
+    return `<span style="color:#6b7280;font-size:12px;">No actions</span>`;
+}
+
+
+function localDateString(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
+function timeToMinutes(value) {
+    if (!value) return null;
+
+    const match = String(value).match(/^(\d{1,2}):(\d{2})/);
+    if (!match) return null;
+
+    return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function officeBookingsForDate(date) {
+    return bookings.filter(b => {
+        if (b.space !== "Office Space") return false;
+        if (getBookingDate(b) !== date) return false;
+
+        const status = String(b.status || "").toLowerCase();
+
+        return status !== "cancelled" &&
+               status !== "canceled";
+    });
+}
+
+function getDeskSchedule(desk, date) {
+    const dayBookings = officeBookingsForDate(date)
+        .filter(b => getPlace(b) === desk);
+
+    const fullDay = dayBookings.some(
+        b => String(b.officeBookingType || "").toLowerCase() === "full day"
+    );
+
+    if (fullDay) {
+        return {
+            state: "booked",
+            bookings: dayBookings
+        };
+    }
+
+    const hourlyBookings = dayBookings.filter(
+        b => String(b.officeBookingType || "").toLowerCase() === "hourly"
+    );
+
+    if (!hourlyBookings.length) {
+        return {
+            state: "available",
+            bookings: []
+        };
+    }
+
+    return {
+        state: "partial",
+        bookings: hourlyBookings
+    };
+}
+
+function renderAvailability() {
+    const date = document.getElementById("availabilityDate").value;
+    const grid = document.getElementById("availabilityGrid");
+
+    if (!date) {
+        grid.innerHTML = `
+            <div class="desk-card available">
+                <div class="availability-empty">
+                    Select a date to view Workstation 1–4 availability.
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const desks = ["Workstation 1", "Workstation 2", "Workstation 3", "Workstation 4"];
+
+    grid.innerHTML = desks.map(desk => {
+        const schedule = getDeskSchedule(desk, date);
+
+        if (schedule.state === "available") {
+            return `
+                <article class="desk-card available">
+                    <h4>${esc(desk)}</h4>
+                    <div class="desk-status available-text">● AVAILABLE</div>
+                    <div class="availability-empty">
+                        No active booking for this date.
+                    </div>
+                </article>
+            `;
+        }
+
+        if (schedule.state === "booked") {
+            return `
+                <article class="desk-card booked">
+                    <h4>${esc(desk)}</h4>
+                    <div class="desk-status booked-text">● FULL DAY BOOKED</div>
+                    ${schedule.bookings.map(b => `
+                        <div class="desk-booking">
+                            <strong>${esc(b.name || "Customer")}</strong>
+                            <span>${esc(b.bookingId || "")}</span>
+                        </div>
+                    `).join("")}
+                </article>
+            `;
+        }
+
+        return `
+            <article class="desk-card partial">
+                <h4>${esc(desk)}</h4>
+                <div class="desk-status partial-text">● PARTIALLY BOOKED</div>
+                ${schedule.bookings.map(b => `
+                    <div class="desk-booking">
+                        <strong>${esc(getTime(b))}</strong>
+                        <span>${esc(b.name || "Customer")}</span>
+                    </div>
+                `).join("")}
+            </article>
+        `;
+    }).join("");
+}
+
+
+function bookingDetailsHTML(b){
+  const office=b.space==="Office Space";
+  return `
+  <section class="detail-section"><h4>Customer</h4><div class="detail-grid">
+    <div class="detail-item"><span class="detail-label">Name</span><span class="detail-value">${esc(b.name||"—")}</span></div>
+    <div class="detail-item"><span class="detail-label">Phone</span><span class="detail-value">${esc(b.phone||"—")}</span></div>
+    <div class="detail-item full"><span class="detail-label">Email</span><span class="detail-value">${esc(b.email||"—")}</span></div>
+  </div></section>
+  <section class="detail-section"><h4>Booking</h4><div class="detail-grid">
+    <div class="detail-item"><span class="detail-label">Booking ID</span><span class="detail-value">${esc(b.bookingId||"—")}</span></div>
+    <div class="detail-item"><span class="detail-label">Space</span><span class="detail-value">${esc(b.space||"—")}</span></div>
+    <div class="detail-item"><span class="detail-label">${office?"Workstation":"Room"}</span><span class="detail-value">${esc(getPlace(b))}</span></div>
+    <div class="detail-item"><span class="detail-label">Booking Type</span><span class="detail-value">${esc(getType(b))}</span></div>
+  </div></section>
+  <section class="detail-section"><h4>Schedule</h4><div class="detail-grid">
+    <div class="detail-item"><span class="detail-label">${office?"Office Date":"Check-in"}</span><span class="detail-value">${esc(office?(b.officeDate||"—"):(b.checkinDate||"—"))}</span></div>
+    <div class="detail-item"><span class="detail-label">${office?"Time":"Check-out"}</span><span class="detail-value">${esc(office?getTime(b):(b.checkoutDate||"—"))}</span></div>
+  </div></section>
+  <section class="detail-section"><h4>Status</h4><span class="status ${statusClass(b.status)}">${esc(b.status||"Unknown")}</span></section>`;
+}
+
+function openBookingDetails(id){
+  const b=bookings.find(x=>String(x.bookingId)===String(id));
+  if(!b)return;
+  document.getElementById("bookingModalSubtitle").textContent=b.bookingId||"";
+  document.getElementById("bookingDetails").innerHTML=bookingDetailsHTML(b);
+  const actions=document.getElementById("modalActions");
+  actions.innerHTML=getActionButtons(b);
+  actions.querySelectorAll(".action-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>updateBookingStatus(btn.dataset.bookingId,btn.dataset.status,btn));
+  });
+  document.getElementById("bookingModal").classList.add("show");
+  document.getElementById("bookingModal").setAttribute("aria-hidden","false");
+}
+function closeBookingDetails(){
+  document.getElementById("bookingModal").classList.remove("show");
+  document.getElementById("bookingModal").setAttribute("aria-hidden","true");
+}
+function render() {
+    renderAvailability();
+
+    const search = document.getElementById("searchInput").value.toLowerCase().trim();
+    const space = document.getElementById("spaceFilter").value;
+    const desk = document.getElementById("deskFilter").value;
+    const bookingType = document.getElementById("bookingTypeFilter").value.toLowerCase();
+    const status = document.getElementById("statusFilter").value.toLowerCase();
+    const date = document.getElementById("dateFilter").value;
+
+    const filtered = bookings.filter(b => {
+        const haystack = [
+            b.bookingId, b.name, b.email, b.phone,
+            b.space, b.roomName, b.desk
+        ].join(" ").toLowerCase();
+
+        if (search && !haystack.includes(search)) return false;
+        if (space && b.space !== space) return false;
+
+        if (desk && getPlace(b) !== desk) return false;
+
+        if (
+            bookingType &&
+            String(getType(b) || "").toLowerCase() !== bookingType
+        ) return false;
+
+        if (status && String(b.status || "").toLowerCase() !== status) return false;
+        if (date && getBookingDate(b) !== date) return false;
+
+        return true;
+    });
+
+    updateSummary(bookings);
+
+    body.innerHTML = "";
+
+    if (!filtered.length) {
+        table.style.display = "none";
+        state.style.display = "block";
+        state.className = "empty";
+        state.textContent = bookings.length
+            ? "No bookings match your filters."
+            : "No bookings found.";
+        return;
+    }
+
+    state.style.display = "none";
+    table.style.display = "table";
+
+    filtered.forEach(b => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><strong>${esc(b.bookingId)}</strong></td>
+            <td>${esc(b.name)}</td>
+            <td>${esc(b.email)}<br>${esc(b.phone)}</td>
+            <td>${esc(b.space)}</td>
+            <td>${esc(getPlace(b))}</td>
+            <td>${esc(getBookingDate(b))}</td>
+            <td>${esc(getType(b))}</td>
+            <td>${esc(getTime(b))}</td>
+            <td>
+                <span class="status ${statusClass(b.status)}">
+                    ${esc(b.status || "Unknown")}
+                </span>
+            </td>
+            <td><button class="view-booking-btn" type="button" data-view-booking="${esc(b.bookingId)}">View</button><br><br>${getActionButtons(b)}</td>
+        `;
+        body.appendChild(tr);
+    });
+
+    body.querySelectorAll("[data-view-booking]").forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            openBookingDetails(button.dataset.viewBooking);
+        });
+    });
+
+    body.querySelectorAll(".action-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            updateBookingStatus(
+                button.dataset.bookingId,
+                button.dataset.status,
+                button
+            );
+        });
+    });
+}
+
+async function loadBookings() {
+
+    const token =
+        sessionStorage.getItem("safeEdgeAdminToken");
+
+    if (!token) {
+        showLogin();
+        return;
+    }
+
+    state.style.display = "block";
+    state.className = "loading";
+    state.textContent = "Loading bookings...";
+    table.style.display = "none";
+
+    try {
+
+        const body = new URLSearchParams({
+            action: "adminBookings",
+            token: token
+        });
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            body: body
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to reach booking API.");
+        }
+
+        const result = await response.json();
+
+        if (result.authenticated === false) {
+            sessionStorage.removeItem("safeEdgeAdminToken");
+            showLogin();
+            return;
+        }
+
+        if (result.success === false) {
+            throw new Error(
+                result.message ||
+                "Unable to load bookings."
+            );
+        }
+
+        const data =
+            Array.isArray(result)
+                ? result
+                : Array.isArray(result.bookings)
+                    ? result.bookings
+                    : [];
+
+        /*
+         * Show newest booking first.
+         */
+        bookings = data.reverse();
+
+        render();
+
+        document.getElementById("lastUpdated").textContent =
+            "Last updated: " + new Date().toLocaleString();
+
+    } catch (error) {
+
+        state.className = "error";
+        state.style.display = "block";
+        state.textContent =
+            error.message ||
+            "Unable to load bookings.";
+
+        console.error(error);
+    }
+}
+
+
+function showLogin() {
+
+    document.getElementById("adminApp").hidden = true;
+    document.getElementById("loginScreen").style.display = "flex";
+
+}
+
+
+function showDashboard() {
+
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("adminApp").hidden = false;
+
+}
+
+
+async function adminLogin() {
+
+    const email =
+        document
+            .getElementById("adminEmail")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("adminPassword")
+            .value;
+
+    const error =
+        document.getElementById("loginError");
+
+    const button =
+        document.getElementById("loginButton");
+
+    error.textContent = "";
+
+    if (!email || !password) {
+        error.textContent =
+            "Please enter your email and password.";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Signing in...";
+
+    try {
+
+        const body = new URLSearchParams({
+            action: "adminLogin",
+            email: email,
+            password: password
+        });
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            body: body
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to connect to the server.");
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+            error.textContent =
+                result.message ||
+                "Invalid email or password.";
+            return;
+        }
+
+        sessionStorage.setItem(
+            "safeEdgeAdminToken",
+            result.token
+        );
+
+        showDashboard();
+
+        await loadBookings();
+
+    } catch (loginError) {
+
+        console.error(loginError);
+
+        error.textContent =
+            loginError.message ||
+            "Unable to connect to the server.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Login";
+    }
+}
+
+
+function adminLogout() {
+
+    sessionStorage.removeItem(
+        "safeEdgeAdminToken"
+    );
+
+    document.getElementById("adminEmail").value = "";
+    document.getElementById("adminPassword").value = "";
+    document.getElementById("loginError").textContent = "";
+
+    showLogin();
+}
+
+document
+    .getElementById("refreshBtn")
+    .addEventListener("click", loadBookings);
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener("click", adminLogout);
+
+document
+    .getElementById("loginForm")
+    .addEventListener("submit", function(event) {
+        event.preventDefault();
+        adminLogin();
+    });
+
+document
+    .getElementById("searchInput")
+    .addEventListener("input", render);
+
+document
+    .getElementById("spaceFilter")
+    .addEventListener("change", render);
+
+document
+    .getElementById("deskFilter")
+    .addEventListener("change", render);
+
+document
+    .getElementById("bookingTypeFilter")
+    .addEventListener("change", render);
+
+document
+    .getElementById("statusFilter")
+    .addEventListener("change", render);
+
+document
+    .getElementById("dateFilter")
+    .addEventListener("change", render);
+
+document
+    .getElementById("clearFilters")
+    .addEventListener("click", () => {
+
+        document.getElementById("searchInput").value = "";
+        document.getElementById("spaceFilter").value = "";
+        document.getElementById("deskFilter").value = "";
+        document.getElementById("bookingTypeFilter").value = "";
+        document.getElementById("statusFilter").value = "";
+        document.getElementById("dateFilter").value = "";
+
+        render();
+    });
+
+
+const availabilityDate =
+    document.getElementById("availabilityDate");
+
+availabilityDate.value =
+    localDateString();
+
+availabilityDate.addEventListener(
+    "change",
+    renderAvailability
+);
+
+
+document
+    .getElementById("modalClose")
+    .addEventListener(
+        "click",
+        closeBookingDetails
+    );
+
+
+document
+    .getElementById("bookingModal")
+    .addEventListener("click", (e) => {
+
+        if (
+            e.target.id ===
+            "bookingModal"
+        ) {
+            closeBookingDetails();
+        }
+
+    });
+
+
+document.addEventListener(
+    "keydown",
+    (e) => {
+
+        if (e.key === "Escape") {
+            closeBookingDetails();
+        }
+
+    }
+);
+
+
+/* =========================
+   INITIAL AUTH CHECK
+   ========================= */
+
+const existingToken =
+    sessionStorage.getItem(
+        "safeEdgeAdminToken"
+    );
+
+if (existingToken) {
+
+    showDashboard();
+    loadBookings();
+
+} else {
+
+    showLogin();
+
+}
+
+</script>
+</body>
+</html>
